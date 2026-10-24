@@ -630,7 +630,7 @@ function rememberTerminal(id){if(!['KASIR-A','KASIR-B'].includes(id))return;curr
 function terminalOf(record){return String(record?.terminalId||'KASIR-A')}
 function belongsToCurrentTerminal(record){return terminalOf(record)===currentTerminalId}
 function terminalRecords(list){return (Array.isArray(list)?list:[]).filter(belongsToCurrentTerminal)}
-const GOOGLE_SHEETS_URL='https://script.google.com/macros/s/AKfycbyOTXlQ_YvVXKB6o1DkxRkdyzRnenB_TrB3666ceaeJrohkSx2LL7hXFdYi4H2cuKgY/exec';
+const GOOGLE_SHEETS_URL='https://script.google.com/macros/s/AKfycbyJ2L8ruoAg_b0Dy4UBhhzLvqRw3mF03aDgKNP102ADsaz50-3ggcBV2LapAS-g8fBcvA/exec';
 let syncTimer=null, syncBusy=false, syncStatus='Menyiapkan koneksi Google Sheets';
 // Fail-safe: do not upload anything until this session has successfully loaded server data.
 let cloudReady=false;
@@ -811,19 +811,21 @@ function createShiftSession(name,shift){
 }
 async function autoAssignTerminal(){
  try{
-  const r=await fetch(apiUrl(),{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'autoAssignTerminal',deviceId}),redirect:'follow'});
+  const url=apiUrl()+(apiUrl().includes('?')?'&':'?')+'action=autoAssignTerminal&deviceId='+encodeURIComponent(deviceId)+'&_='+Date.now();
+  const r=await fetch(url,{method:'GET',cache:'no-store'});
   const j=await r.json();
   if(!r.ok||!j?.ok)throw new Error(j?.error||'Terminal otomatis tidak tersedia');
   rememberTerminal(j.terminalId);terminalWasSaved=true;return j;
- }catch(e){console.warn('Auto assign terminal gagal',e);return {ok:false,error:e.message||'Tidak bisa menentukan terminal otomatis.'}}
+ }catch(e){console.warn('Auto assign terminal gagal',e);return {ok:false,error:'Gagal mengenali perangkat ke server. Pastikan Code.gs versi terbaru sudah di-deploy. ('+(e.message||'fetch gagal')+')'}}
 }
 async function claimTerminal(takeover){
  try{
-  const r=await fetch(apiUrl(),{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'claimTerminal',terminalId:currentTerminalId,deviceId,takeover:!!takeover}),redirect:'follow'});
+  const url=apiUrl()+(apiUrl().includes('?')?'&':'?')+'action=claimTerminal&terminalId='+encodeURIComponent(currentTerminalId)+'&deviceId='+encodeURIComponent(deviceId)+'&takeover='+(takeover?'true':'false')+'&_='+Date.now();
+  const r=await fetch(url,{method:'GET',cache:'no-store'});
   const j=await r.json();
   if(!r.ok)throw new Error('HTTP '+r.status);
   return j;
- }catch(e){console.warn('Claim terminal gagal',e);return {ok:false,error:'Tidak bisa memverifikasi terminal ke server. Coba lagi saat koneksi stabil.'}}
+ }catch(e){console.warn('Claim terminal gagal',e);return {ok:false,error:'Gagal memverifikasi perangkat ke server. Pastikan Code.gs versi terbaru sudah di-deploy. ('+(e.message||'fetch gagal')+')'}}
 }
 setInterval(async()=>{
  if(!state.cashier||!navigator.onLine||!apiUrl()||terminalLeaseLost)return;
