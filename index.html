@@ -630,7 +630,7 @@ function rememberTerminal(id){if(!['KASIR-A','KASIR-B'].includes(id))return;curr
 function terminalOf(record){return String(record?.terminalId||'KASIR-A')}
 function belongsToCurrentTerminal(record){return terminalOf(record)===currentTerminalId}
 function terminalRecords(list){return (Array.isArray(list)?list:[]).filter(belongsToCurrentTerminal)}
-const GOOGLE_SHEETS_URL='https://script.google.com/macros/s/AKfycbyJ2L8ruoAg_b0Dy4UBhhzLvqRw3mF03aDgKNP102ADsaz50-3ggcBV2LapAS-g8fBcvA/exec';
+const GOOGLE_SHEETS_URL='https://script.google.com/macros/s/AKfycby_gM_psTp-sNkrK7z5ny_qXaoRjfrioAhib8DwS9aZ9ZutrVrJZDxGvjqasYEYgJUk6A/exec';
 let syncTimer=null, syncBusy=false, syncStatus='Menyiapkan koneksi Google Sheets';
 // Fail-safe: do not upload anything until this session has successfully loaded server data.
 let cloudReady=false;
@@ -721,12 +721,32 @@ async function syncCloud(showMessage=false){
   return false;
  }finally{syncBusy=false;updateSyncIndicator()}
 }
+// Panggil endpoint GET Apps Script melalui JSONP agar browser tidak memblokir CORS.
+let jsonpCounter=0;
+function googleJsonp(params, timeoutMs=20000){
+ return new Promise((resolve,reject)=>{
+  const callbackName='__warkopJsonp_'+Date.now()+'_'+(++jsonpCounter);
+  const script=document.createElement('script');
+  const query=new URLSearchParams({...params,callback:callbackName,_:Date.now()});
+  let timer;
+  const cleanup=()=>{
+   if(timer)clearTimeout(timer);
+   try{delete window[callbackName]}catch(_){window[callbackName]=undefined}
+   if(script.parentNode)script.parentNode.removeChild(script);
+  };
+  window[callbackName]=(data)=>{cleanup();resolve(data)};
+  script.onerror=()=>{cleanup();reject(new Error('Gagal memuat respons JSONP dari Google Apps Script'))};
+  timer=setTimeout(()=>{cleanup();reject(new Error('Waktu tunggu Google Apps Script habis'))},timeoutMs);
+  script.src=apiUrl()+(apiUrl().includes('?')?'&':'?')+query.toString();
+  script.async=true;
+  document.head.appendChild(script);
+ });
+}
 async function pullCloud(showMessage=false){
  const url=apiUrl();if(!url||!navigator.onLine){cloudReady=false;return false}
  try{
-  const r=await fetch(url+(url.includes('?')?'&':'?')+'action=load&terminalId='+encodeURIComponent(currentTerminalId)+'&_='+Date.now());
-  if(!r.ok)throw new Error('HTTP '+r.status);
-  const j=await r.json();if(!j?.ok||!j.data)throw new Error(j?.error||'Data Google Sheets tidak valid');
+  const j=await googleJsonp({action:'load',terminalId:currentTerminalId});
+  if(!j?.ok||!j.data)throw new Error(j?.error||'Data Google Sheets tidak valid');
   const preferRemote=!localSnapshotAtBoot||isPristineLocalDefaults();
   db=mergeCloudData(db,j.data,preferRemote);
   if(!j.data.runtime && String(db.runtime?.terminalId||'KASIR-A')!==currentTerminalId)db.runtime={terminalId:currentTerminalId,deviceId,cashier:'',shift:'',sessionId:null,cart:[],category:'Semua',discountType:'Rp',discount:0};
@@ -811,19 +831,14 @@ function createShiftSession(name,shift){
 }
 async function autoAssignTerminal(){
  try{
-  const url=apiUrl()+(apiUrl().includes('?')?'&':'?')+'action=autoAssignTerminal&deviceId='+encodeURIComponent(deviceId)+'&_='+Date.now();
-  const r=await fetch(url,{method:'GET',cache:'no-store'});
-  const j=await r.json();
-  if(!r.ok||!j?.ok)throw new Error(j?.error||'Terminal otomatis tidak tersedia');
+  const j=await googleJsonp({action:'autoAssignTerminal',deviceId});
+  if(!j?.ok)throw new Error(j?.error||'Terminal otomatis tidak tersedia');
   rememberTerminal(j.terminalId);terminalWasSaved=true;return j;
  }catch(e){console.warn('Auto assign terminal gagal',e);return {ok:false,error:'Gagal mengenali perangkat ke server. Pastikan Code.gs versi terbaru sudah di-deploy. ('+(e.message||'fetch gagal')+')'}}
 }
 async function claimTerminal(takeover){
  try{
-  const url=apiUrl()+(apiUrl().includes('?')?'&':'?')+'action=claimTerminal&terminalId='+encodeURIComponent(currentTerminalId)+'&deviceId='+encodeURIComponent(deviceId)+'&takeover='+(takeover?'true':'false')+'&_='+Date.now();
-  const r=await fetch(url,{method:'GET',cache:'no-store'});
-  const j=await r.json();
-  if(!r.ok)throw new Error('HTTP '+r.status);
+  const j=await googleJsonp({action:'claimTerminal',terminalId:currentTerminalId,deviceId,takeover:takeover?'true':'false'});
   return j;
  }catch(e){console.warn('Claim terminal gagal',e);return {ok:false,error:'Gagal memverifikasi perangkat ke server. Pastikan Code.gs versi terbaru sudah di-deploy. ('+(e.message||'fetch gagal')+')'}}
 }
