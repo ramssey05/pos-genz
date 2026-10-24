@@ -630,7 +630,7 @@ function rememberTerminal(id){if(!['KASIR-A','KASIR-B'].includes(id))return;curr
 function terminalOf(record){return String(record?.terminalId||'KASIR-A')}
 function belongsToCurrentTerminal(record){return terminalOf(record)===currentTerminalId}
 function terminalRecords(list){return (Array.isArray(list)?list:[]).filter(belongsToCurrentTerminal)}
-const GOOGLE_SHEETS_URL='https://script.google.com/macros/s/AKfycby_gM_psTp-sNkrK7z5ny_qXaoRjfrioAhib8DwS9aZ9ZutrVrJZDxGvjqasYEYgJUk6A/exec';
+const GOOGLE_SHEETS_URL='https://script.google.com/macros/s/AKfycbyk8xVuoQX4ZsJBhHH4KgSM7kO6w8hqO9LIniUj0n350gRp2phb-0TRrVKFLUse9iqv1Q/exec';
 let syncTimer=null, syncBusy=false, syncStatus='Menyiapkan koneksi Google Sheets';
 // Fail-safe: do not upload anything until this session has successfully loaded server data.
 let cloudReady=false;
