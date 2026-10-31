@@ -11,7 +11,7 @@
 *{box-sizing:border-box}html,body{margin:0;height:100%;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;background:var(--bg);color:#183047;font-size:13px}
 button,input,select{font:inherit}button{cursor:pointer;border:0}.hidden{display:none!important}
 .app{height:100dvh;display:flex;flex-direction:column}.topbar{height:64px;flex:none;background:linear-gradient(90deg,var(--navy),#164d78);color:white;display:flex;align-items:center;justify-content:space-between;padding:0 18px;gap:12px}.brand{font-size:18px;font-weight:800;white-space:nowrap}.status{display:flex;gap:14px;align-items:center;font-size:13px}.pill{background:#ffffff1c;border:1px solid #ffffff33;padding:7px 10px;border-radius:10px}
-.main{min-height:0;flex:1;display:grid;grid-template-columns:minmax(0,1.65fr) minmax(310px,.85fr);gap:12px;padding:12px}.panel{background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);min-height:0}.menu-panel{display:flex;flex-direction:column;overflow:hidden}.toolbar{padding:12px;border-bottom:1px solid var(--line);display:flex;gap:8px;align-items:center;flex-wrap:wrap}.search{flex:1;min-width:170px}.input,.select{border:1px solid #cbd9e5;border-radius:10px;padding:10px 12px;background:white;outline:none;width:100%}.input:focus{border-color:var(--blue);box-shadow:0 0 0 3px #35a9e820}.cats{display:flex;gap:7px;overflow:auto;padding:0 12px 10px}.cat{padding:8px 11px;border-radius:999px;background:#eef5fa;color:#31506a;white-space:nowrap}.cat.active{background:var(--navy);color:#fff}.products{padding:12px;overflow:auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:10px}.product{border:1px solid var(--line);border-radius:13px;overflow:hidden;background:#fff;text-align:left;transition:.15s}.product:hover{transform:translateY(-1px);box-shadow:var(--shadow)}.pic{height:92px;background:linear-gradient(135deg,#e7f5fd,#cfe9f7);display:flex;align-items:center;justify-content:center;font-size:42px;overflow:hidden}.pic img{width:100%;height:100%;object-fit:cover}.pinfo{padding:9px}.pname{font-weight:750;font-size:13px;line-height:1.25}.price{color:var(--navy);font-weight:800;margin-top:5px;font-size:13px}
+.main{min-height:0;flex:1;display:grid;grid-template-columns:minmax(0,1.65fr) minmax(310px,.85fr);gap:12px;padding:12px}.panel{background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);min-height:0}.menu-panel{display:flex;flex-direction:column;overflow:hidden}.toolbar{padding:12px;border-bottom:1px solid var(--line);display:flex;gap:8px;align-items:center;flex-wrap:wrap}.search{flex:1;min-width:170px}.input,.select{border:1px solid #cbd9e5;border-radius:10px;padding:10px 12px;background:white;outline:none;width:100%}.input:focus{border-color:var(--blue);box-shadow:0 0 0 3px #35a9e820}.cats{display:flex;gap:7px;overflow:auto;padding:8px 12px 10px}.cat{padding:8px 11px;border-radius:999px;background:#eef5fa;color:#31506a;white-space:nowrap}.cat.active{background:var(--navy);color:#fff}.products{padding:12px;overflow:auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:10px}.product{border:1px solid var(--line);border-radius:13px;overflow:hidden;background:#fff;text-align:left;transition:.15s}.product:hover{transform:translateY(-1px);box-shadow:var(--shadow)}.pic{height:92px;background:linear-gradient(135deg,#e7f5fd,#cfe9f7);display:flex;align-items:center;justify-content:center;font-size:42px;overflow:hidden}.pic img{width:100%;height:100%;object-fit:cover}.pinfo{padding:9px}.pname{font-weight:750;font-size:13px;line-height:1.25}.price{color:var(--navy);font-weight:800;margin-top:5px;font-size:13px}
 .cart{display:flex;flex-direction:column;overflow:hidden}.carthead{padding:13px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}.cartitems{flex:1;overflow:auto;padding:10px}.cartrow{border-bottom:1px solid #edf2f6;padding:9px 0}.rowtop{display:flex;justify-content:space-between;gap:8px}.qty{display:flex;align-items:center;gap:6px;margin-top:7px}.qty button{width:28px;height:28px;border-radius:8px;background:#eaf4fa;color:var(--navy);font-weight:800}.mini{font-size:12px;color:var(--muted)}.summary{padding:12px;border-top:1px solid var(--line);background:#fbfdff}.sumline{display:flex;justify-content:space-between;margin:6px 0}.total{font-size:16px;font-weight:900;color:var(--navy)}.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.btn{padding:9px 11px;font-size:13px;border-radius:10px;font-weight:750}.primary{background:var(--blue);color:white}.navy{background:var(--navy);color:white}.light{background:#eaf4fa;color:var(--navy)}.danger{background:#fee2e2;color:#991b1b}.footer-nav{height:72px;flex:none;background:#fff;border-top:1px solid var(--line);display:flex;justify-content:center;gap:8px;padding:9px}.navbtn{min-width:120px;font-size:13px;border-radius:11px;background:#eef5fa;color:var(--navy);font-weight:750}.navbtn.active{background:var(--navy);color:#fff}
 .modal{position:fixed;inset:0;background:#06182799;display:flex;align-items:center;justify-content:center;padding:15px;z-index:20}.modalbox{width:min(680px,100%);max-height:92dvh;overflow:auto;background:#fff;border-radius:17px;padding:18px;box-shadow:0 20px 70px #0004}.modalhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}.close{background:#eef2f6;border-radius:99px;width:34px;height:34px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.field{margin-bottom:10px}.field label{display:block;font-size:12px;font-weight:750;margin-bottom:5px}.login{position:fixed;inset:0;background:linear-gradient(145deg,var(--navy),#1c78a9);display:flex;align-items:center;justify-content:center;padding:20px;z-index:50}.loginbox{width:min(430px,100%);background:#fff;border-radius:20px;padding:22px;box-shadow:0 25px 80px #0005}.loginlogo{text-align:center;font-size:44px}.toast{position:fixed;right:15px;bottom:88px;background:var(--navy);color:#fff;padding:12px 15px;border-radius:11px;z-index:80;box-shadow:var(--shadow)}table{width:100%;border-collapse:collapse;font-size:12px}th,td{padding:8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}.scroll{overflow:auto}.empty{text-align:center;color:var(--muted);padding:35px 10px}.settingmenu{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px}.settingtab{padding:9px 12px;background:#edf5fa;border-radius:9px}.settingtab.active{background:var(--navy);color:#fff}.notice{padding:10px;background:#eef7ff;border-left:4px solid var(--blue);border-radius:8px;font-size:12px;margin-bottom:12px}
 @media(max-width:800px){.report-window,.settings-window{width:98%;max-height:calc(100dvh - 145px);margin:0 auto}.report-toolbar .input,.report-toolbar .select{max-width:none!important;flex:1;min-width:115px}.main{grid-template-columns:1fr}.cart{min-height:42dvh}.products{grid-template-columns:repeat(auto-fill,minmax(125px,1fr))}.topbar{height:58px;padding:0 10px}.brand{font-size:16px}.status{font-size:11px;gap:6px}.status .pill:first-child{display:none}.footer-nav{height:62px}.navbtn{min-width:0;flex:1;font-size:12px}.grid2{grid-template-columns:1fr}}
@@ -20,12 +20,12 @@ button,input,select{font:inherit}button{cursor:pointer;border:0}.hidden{display:
 @media(max-width:800px) and (orientation:landscape){.main{grid-template-columns:minmax(0,1.18fr) minmax(250px,.82fr);gap:8px;padding:8px}.cart{min-height:0;height:100%}.products{grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:7px;padding:8px}.pic{height:72px}.pinfo{padding:7px}.pname,.price{font-size:11px}.toolbar{padding:8px}.cats{padding:0 8px 7px}.footer-nav{height:54px;padding:6px}.navbtn{font-size:11px}.topbar{height:50px}}
 @media(max-width:420px) and (orientation:portrait){.main{padding:7px;gap:7px}.products{grid-template-columns:repeat(2,minmax(0,1fr));padding:8px;gap:7px}.pic{height:82px}.toolbar{padding:8px}.cats{padding-left:8px;padding-right:8px}.topbar{padding:0 8px}.status{gap:4px}}
 /* Receipt preview / 58mm thermal paper */
-#receiptPreviewBackdrop{z-index:1100;background:#071827cc;overflow:auto;padding:18px 10px}.receipt-preview{display:grid!important;grid-template-columns:minmax(0,1fr)!important;grid-template-rows:auto auto auto!important;align-items:stretch!important;width:min(430px,96vw);max-height:calc(100dvh - 30px);overflow:auto;background:#f3f6f8;border-radius:16px;padding:12px;box-shadow:0 20px 70px #0006}.receipt-preview>.modalhead{grid-column:1!important;grid-row:1!important}.receipt-preview>.receipt-print-area{grid-column:1!important;grid-row:2!important;width:100%!important}.receipt-preview>.receipt-actions{grid-column:1!important;grid-row:3!important;width:100%!important}.receipt-print-area{display:flex;justify-content:center;padding:10px 0 12px;overflow-y:auto;min-height:0;flex:none!important}.receipt-print-paper{width:58mm;min-width:58mm;background:#fff;color:#111;box-shadow:0 2px 12px #0002}.receipt-paper{width:58mm;padding:4mm 3.5mm 5mm;font-family:"Courier New",monospace;font-size:10px;line-height:1.35;word-break:break-word}.r-header{text-align:center}.r-logo{display:block;max-width:22mm;max-height:14mm;object-fit:contain;margin:0 auto 2mm}.r-store{font-size:15px;font-weight:700;letter-spacing:.4px;line-height:1.15}.r-address{font-size:8.5px;line-height:1.3;margin-top:1.5mm}.r-flags{display:flex;justify-content:center;gap:3mm;margin-top:2.5mm}.r-flags span{border:1px solid #111;padding:1mm 2mm;font-size:8px;font-weight:700;letter-spacing:.5px}.r-divider{border-top:1px dashed #222;margin:3mm 0}.r-meta>div{display:flex;justify-content:flex-start;gap:0;align-items:flex-start;margin:1.2mm 0}.r-meta span{width:18mm;min-width:18mm;flex:none}.r-meta i{width:3mm;min-width:3mm;font-style:normal;text-align:center}.r-meta b{flex:1;font-weight:400;text-align:left;max-width:none;word-break:break-word}.r-summary>div{display:flex;justify-content:space-between;gap:4mm;align-items:flex-start;margin:1.2mm 0}.r-summary span{flex:1;min-width:0}.r-summary b{font-weight:400;text-align:right;max-width:65%;word-break:break-word}.r-items{margin-top:1mm}.r-item{margin:1.8mm 0}.r-item-name{font-weight:700;line-height:1.25}.r-item-detail{display:flex;justify-content:space-between;gap:3mm;margin-top:.5mm}.r-total{align-items:center!important;margin-top:2mm!important}.r-total span{font-weight:700}.r-total strong{font-size:13px;font-weight:700}.r-footer{text-align:center;margin-top:2mm}.r-footer>div{font-weight:700;font-size:11px}.r-footer small{display:block;font-size:8px;margin-top:1mm}.receipt-actions{display:flex!important;flex-direction:row!important;align-items:center!important;justify-content:center!important;gap:8px!important;width:100%!important;flex:0 0 auto!important;box-sizing:border-box!important;margin:10px 0 0!important;order:3!important;position:relative!important}.receipt-actions .btn{flex:1 1 0!important;max-width:180px!important}.receipt-no-print{}
+#receiptPreviewBackdrop{z-index:1100;background:#071827cc;overflow:auto;padding:18px 10px}.receipt-preview{display:grid!important;grid-template-columns:minmax(0,1fr)!important;grid-template-rows:auto auto auto!important;align-items:stretch!important;width:min(430px,96vw);max-height:calc(100dvh - 30px);overflow:auto;background:#f3f6f8;border-radius:16px;padding:12px;box-shadow:0 20px 70px #0006}.receipt-preview>.modalhead{grid-column:1!important;grid-row:1!important}.receipt-preview>.receipt-print-area{grid-column:1!important;grid-row:2!important;width:100%!important}.receipt-preview>.receipt-actions{grid-column:1!important;grid-row:3!important;width:100%!important}.receipt-print-area{display:flex;justify-content:center;padding:10px 0 12px;overflow-y:auto;min-height:0;flex:none!important}.receipt-print-paper{width:58mm;min-width:58mm;background:#fff;color:#111;box-shadow:0 2px 12px #0002}.receipt-paper{width:58mm;padding:4mm 3.5mm 5mm;font-family:"Courier New",monospace;font-size:10px;line-height:1.35;word-break:break-word}.r-header{text-align:center}.r-logo{display:block;max-width:20mm;max-height:15mm;object-fit:contain;margin:0 auto 2mm}.r-store{font-size:18px;font-weight:700;letter-spacing:.4px;line-height:1.15}.r-address{font-size:8.5px;line-height:1.3;margin-top:1.5mm}.r-flags{display:flex;justify-content:center;gap:3mm;margin-top:2.5mm}.r-flags span{border:1px solid #111;padding:1mm 2mm;font-size:8px;font-weight:700;letter-spacing:.5px}.r-divider{border-top:1px dashed #222;margin:3mm 0}.r-meta>div{display:flex;justify-content:flex-start;gap:0;align-items:flex-start;margin:1.2mm 0}.r-meta span{width:18mm;min-width:18mm;flex:none}.r-meta i{width:3mm;min-width:3mm;font-style:normal;text-align:center}.r-meta b{flex:1;font-weight:400;text-align:left;max-width:none;word-break:break-word}.r-summary>div{display:flex;justify-content:space-between;gap:4mm;align-items:flex-start;margin:1.2mm 0}.r-summary span{flex:1;min-width:0}.r-summary b{font-weight:400;text-align:right;max-width:65%;word-break:break-word}.r-items{margin-top:1mm}.r-item{margin:1.8mm 0}.r-item-name{font-weight:700;line-height:1.25}.r-item-detail{display:flex;justify-content:space-between;gap:3mm;margin-top:.5mm}.r-total{align-items:center!important;margin-top:2mm!important}.r-total span{font-weight:700}.r-total strong{font-size:13px;font-weight:700}.r-footer{text-align:center;margin-top:2mm}.r-footer>div{font-weight:700;font-size:11px}.r-footer small{display:block;font-size:8px;margin-top:1mm}.receipt-actions{display:flex!important;flex-direction:row!important;align-items:center!important;justify-content:center!important;gap:8px!important;width:100%!important;flex:0 0 auto!important;box-sizing:border-box!important;margin:10px 0 0!important;order:3!important;position:relative!important}.receipt-actions .btn{flex:1 1 0!important;max-width:180px!important}.receipt-no-print{}
 /* Owner report preview uses the same thermal-paper preview container as receipts. */
 .owner-report-paper{width:58mm;min-width:58mm;padding:4mm 3.5mm 5mm;box-sizing:border-box;background:#fff;color:#111;font-family:"Courier New",monospace;font-size:10px;line-height:1.35;word-break:break-word}
 .owner-preview-header{text-align:center}
-.owner-preview-logo{display:block;max-width:22mm;max-height:14mm;object-fit:contain;margin:0 auto 2mm}
-.owner-preview-store{font-size:15px;font-weight:700;letter-spacing:.4px;line-height:1.15}
+.owner-preview-logo{display:block;max-width:20mm;max-height:15mm;object-fit:contain;margin:0 auto 2mm}
+.owner-preview-store{font-size:20px;font-weight:800;letter-spacing:.5px;line-height:1.15}
 .owner-preview-heading{font-size:11px;font-weight:700;line-height:1.2;margin-top:1.5mm}
 .owner-preview-divider{border-top:1px dashed #222;margin:3mm 0}
 .owner-preview-meta{margin:1.5mm 0;line-height:1.45}
@@ -124,7 +124,7 @@ button,input,select{font:inherit}button{cursor:pointer;border:0}.hidden{display:
 .cart-table{display:flex;flex-direction:column;min-height:0;flex:1}
 .cartcols,.cartrow{display:grid;grid-template-columns:24px minmax(90px,1fr) 72px 88px 78px 18px;align-items:center;column-gap:7px}
 .cartcols{padding:10px 12px 7px;color:#50677e;font-size:11px;border-bottom:1px solid var(--line)}
-.cartitems{overflow:auto;padding:0 12px}.cartrow{min-height:54px;border-bottom:1px solid #edf2f6;font-size:11px}.cart-name{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.cart-price{color:#60778e}.cart-total{font-size:11px;text-align:right}.cart-no{color:#7890a5}.qty{display:flex;align-items:center;gap:5px;justify-content:center}.qty button{width:22px;height:22px;border-radius:6px;background:#eef4f8;color:var(--navy);font-size:12px;font-weight:800;padding:0}.qty span{min-width:14px;text-align:center}.remove-cart{background:transparent;color:#ef3340;font-size:18px;line-height:1;padding:0}.cart-empty{padding:35px 8px;font-size:12px}.summary{padding:10px 12px 12px;border-top:1px solid var(--line);background:#fff}.sumline{font-size:11px;margin:6px 0}.discount-box{border:1px solid #ffd66b;background:#fffaf0;border-radius:12px;padding:7px 8px;margin:7px 0}.discount-title{font-size:11px;display:flex;justify-content:space-between;margin-bottom:5px}.discount-title b{color:#ef4444}.discount-inputs{display:grid;grid-template-columns:46px 1fr;gap:5px}.discount-inputs .input,.discount-inputs .select{padding:6px 8px;font-size:11px;height:30px}.cart-grand-total{display:flex;justify-content:space-between;align-items:center;background:#0f172a;color:#fff;border-radius:10px;padding:9px 11px;margin-top:6px;box-shadow:0 4px 10px #0b2a4a22}.cart-grand-total span{font-size:10px;font-weight:500;letter-spacing:.5px}.cart-grand-total b{font-size:17px;color:#29b6f6}.pay-big{width:100%;margin-top:6px;height:42px;border-radius:10px;background:#059f6b;color:#fff;font-size:14px;font-weight:500}.pay-big:disabled{opacity:.45;cursor:not-allowed}.pending-row{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 0;border-bottom:1px solid var(--line)}
+.cartitems{overflow:auto;padding:0 12px}.cartrow{min-height:54px;border-bottom:1px solid #edf2f6;font-size:11px}.cart-name{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.cart-price{color:#60778e}.cart-total{font-size:11px;text-align:right}.cart-no{color:#7890a5}.qty{display:flex;align-items:center;gap:5px;justify-content:center}.qty button{width:22px;height:22px;border-radius:6px;background:#eef4f8;color:var(--navy);font-size:12px;font-weight:800;padding:0}.qty span{min-width:14px;text-align:center}.remove-cart{background:transparent;color:#ef3340;font-size:18px;line-height:1;padding:0}.cart-empty{padding:35px 8px;font-size:12px}.summary{padding:10px 12px 12px;border-top:1px solid var(--line);background:#fff}.sumline{font-size:11px;margin:6px 0}.discount-box{border:1px solid #ffd66b;background:#fffaf0;border-radius:12px;padding:7px 8px;margin:7px 0}.discount-title{font-size:11px;display:flex;justify-content:space-between;margin-bottom:5px}.discount-title b{color:#ef4444}.discount-inputs{display:grid;grid-template-columns:53px 1fr;gap:5px}.discount-inputs .input,.discount-inputs .select{padding:6px 8px;font-size:11px;height:30px}.cart-grand-total{display:flex;justify-content:space-between;align-items:center;background:#0f172a;color:#fff;border-radius:10px;padding:9px 11px;margin-top:6px;box-shadow:0 4px 10px #0b2a4a22}.cart-grand-total span{font-size:10px;font-weight:500;letter-spacing:.5px}.cart-grand-total b{font-size:17px;color:#29b6f6}.pay-big{width:100%;margin-top:6px;height:42px;border-radius:10px;background:#059f6b;color:#fff;font-size:14px;font-weight:500}.pay-big:disabled{opacity:.45;cursor:not-allowed}.pending-row{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 0;border-bottom:1px solid var(--line)}
 @media(max-width:800px){.cartcols,.cartrow{grid-template-columns:20px minmax(75px,1fr) 62px 78px 70px 16px}.cartcols{font-size:10px}.cartrow{font-size:10px}.cart-grand-total b{font-size:16px}}
 
 body,button,input,select{font-weight:400}
@@ -427,7 +427,7 @@ body {
   }
 
   .toolbar { padding: 12px !important; }
-  .cats { padding: 0 12px 10px !important; }
+  .cats { padding: 8 12px 10px !important; }
 
   .products {
     min-height: 0 !important;
@@ -995,19 +995,44 @@ function printById(id,voided){const s=db.sales.find(x=>x.id===id);if(s)printRece
 // HYBRID PRINTING ENGINE (DIRECT WEB BT & RAWBT FALLBACK)
 // -------------------------------------------------------------
 function generateReceiptText(s, isVoid=false, reprint=false) {
-  const sub = s.items.reduce((a,x)=>a+x.price*x.qty, 0);
-  const disc = s.discountType === '%' ? sub * s.discount / 100 : s.discount;
+  const W = 32; // Lebar kertas thermal (umumnya 32 karakter)
+  
+  // Fungsi helper untuk meratakan teks ke tengah
+  const center = (text) => {
+    text = String(text);
+    const left = Math.max(0, Math.floor((W - text.length) / 2));
+    return ' '.repeat(left) + text + '\n';
+  };
+
+  const sub = s.items.reduce((a, x) => a + x.price * x.qty, 0);
+  const disc = s.discountType === '%' ? (sub * s.discount / 100) : s.discount;
   const after = sub - disc;
-  const ppn = s.tax ? after * s.tax / 100 : 0;
+  const ppn = s.tax ? (after * s.tax / 100) : 0;
+
+  // Format waktu TANPA DETIK (hanya jam dan menit)
+  const formattedDate = new Date(s.date).toLocaleString('id-ID', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false
+  }).replace(/\./g, ':'); // Mengubah titik pemisah jam (00.00) menjadi colon (00:00) jika diperlukan
 
   let text = "";
-  text += (db.settings.name || "WARKOP").toUpperCase() + "\n";
-  if (db.settings.address) text += db.settings.address + "\n";
-  if (isVoid) text += "*** VOID ***\n";
-  if (reprint) text += "*** REPRINT ***\n";
+  
+  // Header: nama warkop dicetak lebih besar (double height), tetap rata tengah.
+  const storeName = (db.settings.name || "WARKOP").toUpperCase();
+  text += '\x1b\x61\x01' + '\x1d\x21\x10' + storeName + '\x1d\x21\x00\n' + '\x1b\x61\x00';
+  if (db.settings.address) text += center(db.settings.address);
+
+  // Status Void / Reprint dibuat Center juga
+  if (isVoid) text += center("*** VOID ***");
+  if (reprint) text += center("*** REPRINT ***");
+  
   text += "--------------------------------\n";
   text += `No     : ${s.id}\n`;
-  text += `Waktu  : ${new Date(s.date).toLocaleString('id-ID')}\n`;
+  text += `Waktu  : ${formattedDate}\n`;
   text += `Kasir  : ${s.cashier}\n`;
   text += `Meja   : ${s.customer}\n`;
   text += "--------------------------------\n";
@@ -1016,14 +1041,15 @@ function generateReceiptText(s, isVoid=false, reprint=false) {
     text += `${x.name}\n`;
     const qtyPrice = `${x.qty} x ${rupiah(x.price)}`;
     const tot = rupiah(x.price * x.qty);
-    const space = Math.max(1, 32 - qtyPrice.length - tot.length);
+    const space = Math.max(1, W - qtyPrice.length - tot.length);
     text += qtyPrice + " ".repeat(space) + tot + "\n";
   });
   
   text += "--------------------------------\n";
   
   const padRow = (lbl, val) => {
-    const sp = Math.max(1, 32 - lbl.length - val.length);
+    lbl = String(lbl); val = String(val);
+    const sp = Math.max(1, W - lbl.length - val.length);
     return lbl + " ".repeat(sp) + val + "\n";
   };
   
@@ -1038,37 +1064,109 @@ function generateReceiptText(s, isVoid=false, reprint=false) {
   }
   text += padRow("Metode", s.method);
   text += "--------------------------------\n";
-  text += "       Terima Kasih! 🙏\n\n\n";
+  text += center("Terima Kasih!") + "\n\n\n"; // Menambah 2 baris enter di bawah
 
   return text;
 }
 
-function printViaRawBTText(plainText) {
-  const ESC = '\x1B';
-  const initPrinter = ESC + '@';
-  const fullData = initPrinter + plainText;
-  
-  // Konversi teks laporan ke format Base64 yang aman untuk Android
-  const base64Data = btoa(unescape(encodeURIComponent(fullData)));
-  
-  // PERBAIKAN FATAL: Format URL Intent Android yang benar agar langsung masuk ke aplikasi RawBT
-  const intentUrl = 'intent:#Intent;' +
-    'action=ru.a404m.rawbtprinter.action.PRINT;' +
-    'category=android.intent.category.DEFAULT;' +
-    'type=text/plain;' +
-    'S.base64=' + base64Data + ';' +
-    'package=ru.a404m.rawbtprinter;' +
-    'end;';
-  
-  try { 
-    // Paksa tablet Android membuka aplikasi RawBT dan langsung ngeprint
-    window.location.href = intentUrl; 
-    toast('Mengirim laporan ke aplikasi RawBT...');
-  } catch(e) { 
-    toast('Aplikasi RawBT tidak dapat dibuka di tablet ini.'); 
+// Konversi logo Data URL menjadi bitmap ESC/POS untuk printer thermal 58 mm (384 dot).
+async function receiptLogoBytes() {
+  const src = db.settings.logo;
+  if (!src) return new Uint8Array(0);
+
+  const img = new Image();
+  img.src = src;
+  await new Promise((resolve, reject) => {
+    img.onload = resolve;
+    img.onerror = () => reject(new Error('Logo tidak dapat dibaca.'));
+  });
+
+  // Ukuran logo struk 58 mm: sekitar 20 mm lebar dan maksimal 15 mm tinggi.
+  const maxWidth = 160;
+  const maxHeight = 120;
+  const scale = Math.min(1, maxWidth / img.naturalWidth, maxHeight / img.naturalHeight);
+  const width = Math.max(1, Math.round(img.naturalWidth * scale));
+  const height = Math.max(1, Math.round(img.naturalHeight * scale));
+  const canvas = document.createElement('canvas');
+  canvas.width = width;
+  canvas.height = height;
+  const ctx = canvas.getContext('2d', { willReadFrequently: true });
+  ctx.fillStyle = '#fff';
+  ctx.fillRect(0, 0, width, height);
+  ctx.drawImage(img, 0, 0, width, height);
+
+  const pixels = ctx.getImageData(0, 0, width, height).data;
+  const bytesPerRow = Math.ceil(width / 8);
+  const raster = new Uint8Array(bytesPerRow * height);
+  for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
+      const i = (y * width + x) * 4;
+      const gray = (pixels[i] * 299 + pixels[i + 1] * 587 + pixels[i + 2] * 114) / 1000;
+      if (gray < 160) raster[y * bytesPerRow + (x >> 3)] |= (0x80 >> (x & 7));
+    }
   }
+
+  // GS v 0: raster bit image. Alignment center applies to the image.
+  const wL = bytesPerRow & 0xff;
+  const wH = (bytesPerRow >> 8) & 0xff;
+  const hL = height & 0xff;
+  const hH = (height >> 8) & 0xff;
+  const header = new Uint8Array([0x1b, 0x61, 0x01, 0x1d, 0x76, 0x30, 0x00, wL, wH, hL, hH]);
+  const footer = new Uint8Array([0x1b, 0x61, 0x00, 0x0a]);
+  const result = new Uint8Array(header.length + raster.length + footer.length);
+  result.set(header, 0);
+  result.set(raster, header.length);
+  result.set(footer, header.length + raster.length);
+  return result;
 }
 
+function concatPrintBytes(parts) {
+  const size = parts.reduce((n, part) => n + part.length, 0);
+  const out = new Uint8Array(size);
+  let offset = 0;
+  for (const part of parts) { out.set(part, offset); offset += part.length; }
+  return out;
+}
+
+async function buildReceiptBytes(plainText) {
+  const encoder = new TextEncoder();
+  let logo = new Uint8Array(0);
+  try { logo = await receiptLogoBytes(); }
+  catch (e) { console.warn('Logo struk dilewati:', e); }
+  return concatPrintBytes([
+    new Uint8Array([0x1b, 0x40]),
+    logo,
+    encoder.encode(plainText + '\n')
+  ]);
+}
+
+function bytesToBase64(bytes) {
+  let binary = '';
+  const chunk = 0x8000;
+  for (let i = 0; i < bytes.length; i += chunk) {
+    binary += String.fromCharCode.apply(null, bytes.subarray(i, i + chunk));
+  }
+  return btoa(binary);
+}
+
+async function printViaRawBTText(plainText) {
+  try {
+    const bytes = await buildReceiptBytes(plainText);
+    const base64Data = bytesToBase64(bytes);
+    const intentUrl = 'intent:#Intent;' +
+      'action=ru.a404m.rawbtprinter.action.PRINT;' +
+      'category=android.intent.category.DEFAULT;' +
+      'type=text/plain;' +
+      'S.base64=' + base64Data + ';' +
+      'package=ru.a404m.rawbtprinter;' +
+      'end;';
+    window.location.href = intentUrl;
+    toast('Mengirim struk dan logo ke RawBT...');
+  } catch (e) {
+    console.error('RawBT print:', e);
+    toast('Gagal menyiapkan logo untuk dicetak.');
+  }
+}
 function receiptHTML(s,isVoid=false,reprint=false){
   const sub=s.items.reduce((a,x)=>a+(Number(x.price)||0)*(Number(x.qty)||0),0);
   const disc=s.discountType==='%'?sub*(Number(s.discount)||0)/100:(Number(s.discount)||0);
@@ -1170,10 +1268,11 @@ async function printPreviewReceipt(){
   const preview = document.querySelector('#receiptPreviewBackdrop .receipt-print-paper');
   if (!preview) return;
 
-  const plainText = preview.dataset.plainText || '';
+  const sForPreview = db.sales.find(x => x.id === preview.dataset.saleId);
+  const plainText = sForPreview ? generateReceiptText(sForPreview, preview.dataset.void === '1', preview.dataset.reprint === '1') : (preview.dataset.plainText || '');
 
   // 1. PRIORITAS UTAMA: Jika Bluetooth Direct sudah terhubung, cetak langsung via Bluetooth (Sama seperti Struk/Void/Reprint)
-  if (btState === 'connected' && printCharacteristic) {
+  if (syncBTConnection()) {
     try {
       await writeBluetoothReceipt(plainText);
       toast('Berhasil dicetak langsung via Bluetooth.');
@@ -1212,23 +1311,23 @@ async function printPreviewReceipt(){
 }
 
 async function writeBluetoothReceipt(plainText){
-  if(btState!=='connected'||!printCharacteristic) return false;
-  const ESC='\x1B';
-  const data=new TextEncoder().encode(ESC+'@'+plainText);
-  const chunkSize=printCharacteristic.properties?.writeWithoutResponse ? 180 : 180;
+  if(!syncBTConnection()) throw new Error('Printer Bluetooth sudah terputus. Hubungkan ulang printer.');
+  const data=await buildReceiptBytes(plainText);
+  const canWriteWithoutResponse=!!printCharacteristic.properties?.writeWithoutResponse && typeof printCharacteristic.writeValueWithoutResponse==='function';
+  const chunkSize=180;
   for(let i=0;i<data.length;i+=chunkSize){
+    if(!syncBTConnection()) throw new Error('Koneksi printer terputus.');
     const chunk=data.slice(i,i+chunkSize);
-    if(printCharacteristic.properties?.writeWithoutResponse && printCharacteristic.writeValueWithoutResponse)
-      await printCharacteristic.writeValueWithoutResponse(chunk);
-    else
-      await printCharacteristic.writeValue(chunk);
+    if(canWriteWithoutResponse) await printCharacteristic.writeValueWithoutResponse(chunk);
+    else await printCharacteristic.writeValue(chunk);
+    if(i+chunkSize<data.length) await new Promise(resolve=>setTimeout(resolve,10));
   }
   return true;
 }
 
 
 async function writeBluetoothReportOnly(plainText) {
-  if (btState !== 'connected' || !printCharacteristic) {
+  if (!syncBTConnection()) {
     throw new Error('Printer Bluetooth belum terhubung.');
   }
 
@@ -1249,7 +1348,7 @@ async function writeBluetoothReportOnly(plainText) {
   const chunkSize = 180;
 
   for (let i = 0; i < data.length; i += chunkSize) {
-    if (btState !== 'connected' || !printCharacteristic) {
+    if (!syncBTConnection()) {
       throw new Error('Koneksi printer terputus.');
     }
 
@@ -1272,7 +1371,7 @@ async function writeBluetoothReportOnly(plainText) {
 async function printReceipt(s,isVoid=false,reprint=false){
   const plainText=generateReceiptText(s,isVoid,reprint);
   // Direct print only when a real Web Bluetooth GATT connection is active.
-  if(btState==='connected'&&printCharacteristic){
+  if(syncBTConnection()){
     try{
       await writeBluetoothReceipt(plainText);
       toast('Struk berhasil dicetak langsung via Bluetooth.');
@@ -1290,10 +1389,18 @@ async function printReceipt(s,isVoid=false,reprint=false){
 // WEB BLUETOOTH DIRECT (BLE/GATT ONLY)
 // -------------------------------------------------------------
 let btPairingToken=0;
+let autoBTTimer=null, autoBTBusy=false;
+// Simpan object perangkat selama halaman masih terbuka; getDevices() tidak tersedia di semua Chrome Android.
+let lastBTDevice=null;
+const btDisconnectHandlers=new WeakSet();
 
 async function bt(){
+  if(autoBTTimer){clearTimeout(autoBTTimer);autoBTTimer=null;}
   if(btState==='connected'){
+    // Jika diputus manual, hentikan percobaan sambung ulang otomatis.
+    try{localStorage.setItem('posBtAutoReconnect','0')}catch(e){}
     try{if(btDevice?.gatt?.connected)btDevice.gatt.disconnect()}catch(e){}
+    lastBTDevice=null;
     resetBTState();
     toast('Bluetooth berhasil diputuskan.');
     return;
@@ -1314,8 +1421,14 @@ async function bt(){
     // Important: classic SPP UUID 00001101 is NOT a Web Bluetooth GATT service.
     // We only ask for known BLE printer services here.
     const bleServices=[
+      '49535343-fe7d-4ae5-8fa9-9fafd205e455', // ISSC
       'e7810a71-73ae-499d-8c15-faa9aef0c3f2',
-      '000018f0-0000-1000-8000-00805f9b34fb'
+      '000018f0-0000-1000-8000-00805f9b34fb', // Thermal Printer
+      '0000ffe0-0000-1000-8000-00805f9b34fb', // Common BLE UART
+      '0000ff00-0000-1000-8000-00805f9b34fb',
+      '0000ff10-0000-1000-8000-00805f9b34fb',
+      '0000ae30-0000-1000-8000-00805f9b34fb',
+      '0000e0ff-0000-1000-8000-00805f9b34fb'
     ];
 
     const device=await navigator.bluetooth.requestDevice({
@@ -1329,41 +1442,148 @@ async function bt(){
       return;
     }
 
-    btDevice=device;
-    const server=await device.gatt.connect();
-    printCharacteristic=null;
-
-    for(const uuid of bleServices){
-      try{
-        const service=await server.getPrimaryService(uuid);
-        const chars=await service.getCharacteristics();
-        printCharacteristic=chars.find(c=>c.properties.write||c.properties.writeWithoutResponse);
-        if(printCharacteristic)break;
-      }catch(e){}
-    }
-
-    if(!printCharacteristic)throw new Error('Printer tidak menyediakan BLE GATT write characteristic.');
-
-    if(pairingToken!==btPairingToken){
-      try{if(device?.gatt?.connected)device.gatt.disconnect()}catch(e){}
-      return;
-    }
-
-    setBTState('connected');
+    lastBTDevice=device;
+    try{
+      localStorage.setItem('posBtAutoReconnect','1');
+      localStorage.setItem('posBtDeviceId',device.id);
+    }catch(e){}
+    await connectBLEPrinter(device,pairingToken);
     toast('Bluetooth Direct Connected: '+(device.name||'Printer BLE'));
-    device.addEventListener?.('gattserverdisconnected',()=>{
-      if(btDevice===device){
-        resetBTState();
-        toast('Bluetooth terputus.');
-      }
-    });
   }catch(e){
     console.error('Web Bluetooth:',e);
     // Jangan mengubah status dari percobaan lama jika sudah ada percobaan baru.
     if(pairingToken===btPairingToken)resetBTState();
     if(e?.name!=='NotFoundError'&&e?.name!=='AbortError'){
-      toast('Printer tidak mendukung Web Bluetooth Direct. Untuk MP-80M gunakan RawBT.');
+      const detail=(e?.name?e.name+': ':'')+(e?.message||String(e));
+      toast('Gagal koneksi Bluetooth — '+detail);
     }
+  }
+}
+
+
+// Sambungkan printer BLE yang sebelumnya sudah diberi izin oleh pengguna.
+// Browser tidak mengizinkan pemilihan perangkat baru tanpa tindakan pengguna,
+// tetapi perangkat yang sudah diizinkan dapat dicari kembali melalui getDevices().
+const BLE_PRINTER_SERVICES=[
+  '49535343-fe7d-4ae5-8fa9-9fafd205e455', // ISSC
+  'e7810a71-73ae-499d-8c15-faa9aef0c3f2',
+  '000018f0-0000-1000-8000-00805f9b34fb', // Thermal Printer
+  '0000ffe0-0000-1000-8000-00805f9b34fb', // Common BLE UART
+  '0000ff00-0000-1000-8000-00805f9b34fb',
+  '0000ff10-0000-1000-8000-00805f9b34fb',
+  '0000ae30-0000-1000-8000-00805f9b34fb',
+  '0000e0ff-0000-1000-8000-00805f9b34fb'
+];
+
+async function connectBLEPrinter(device, token){
+  btDevice=device;
+  lastBTDevice=device;
+  printCharacteristic=null;
+  if(!btDisconnectHandlers.has(device)){
+    btDisconnectHandlers.add(device);
+    device.addEventListener?.('gattserverdisconnected',()=>{
+      if(btDevice===device){
+        resetBTState();
+        if(isAutoBTEnabled()){
+          toast('Printer terputus. POS akan mencoba menyambungkan kembali…');
+          scheduleAutoReconnect(2500);
+        }else{
+          toast('Bluetooth terputus. Silakan hubungkan ulang printer.');
+        }
+      }
+    });
+  }
+  if(!device?.gatt) throw new Error('Perangkat tidak menyediakan koneksi GATT.');
+  const server=await device.gatt.connect();
+  const serviceErrors=[];
+  let services=[];
+  // Ambil semua service yang diizinkan browser terlebih dahulu.
+  try{
+    services=await server.getPrimaryServices();
+  }catch(e){
+    serviceErrors.push('getPrimaryServices: '+(e?.message||e));
+  }
+  // Fallback satu per satu untuk browser/perangkat yang tidak mendukung enumerasi.
+  if(!services.length){
+    for(const uuid of BLE_PRINTER_SERVICES){
+      try{
+        const service=await server.getPrimaryService(uuid);
+        services.push(service);
+      }catch(e){
+        serviceErrors.push(uuid+': '+(e?.message||e));
+      }
+    }
+  }
+  const found=[];
+  for(const service of services){
+    try{
+      const chars=await service.getCharacteristics();
+      const writable=chars.find(c=>c.properties.write||c.properties.writeWithoutResponse);
+      found.push(service.uuid+' ['+chars.map(c=>c.uuid+':'+
+        (c.properties.write?'W':'')+
+        (c.properties.writeWithoutResponse?'WNR':'')+
+        (c.properties.notify?'N':'')).join(', ')+']');
+      if(writable){
+        printCharacteristic=writable;
+        break;
+      }
+    }catch(e){
+      serviceErrors.push(service.uuid+': '+(e?.message||e));
+    }
+  }
+  if(!printCharacteristic){
+    const detail=found.length
+      ? 'Service ditemukan tetapi tidak ada karakteristik WRITE. '+found.join(' | ')
+      : 'Tidak menemukan service BLE yang bisa diakses. '+serviceErrors.slice(0,4).join(' | ');
+    throw new Error(detail);
+  }
+  if(token!==btPairingToken)throw new Error('Percobaan koneksi dibatalkan.');
+  setBTState('connected');
+  try{
+    localStorage.setItem('posBtAutoReconnect','1');
+    localStorage.setItem('posBtDeviceId',device.id);
+  }catch(e){}
+  return true;
+}
+function isAutoBTEnabled(){
+  try{return localStorage.getItem('posBtAutoReconnect')==='1'}catch(e){return false}
+}
+function scheduleAutoReconnect(delay=5000){
+  if(!isAutoBTEnabled()||autoBTTimer)return;
+  autoBTTimer=setTimeout(()=>{
+    autoBTTimer=null;
+    autoReconnectBluetooth();
+  },delay);
+}
+async function autoReconnectBluetooth(){
+  if(autoBTBusy||!isAutoBTEnabled()||syncBTConnection())return;
+  if(!navigator.bluetooth)return;
+  autoBTBusy=true;
+  const token=++btPairingToken;
+  try{
+    let device=lastBTDevice; // paling andal selama halaman POS masih terbuka
+    // Setelah reload, ambil kembali perangkat yang sebelumnya sudah diizinkan browser.
+    if(!device && typeof navigator.bluetooth.getDevices==='function'){
+      const permitted=await navigator.bluetooth.getDevices();
+      let wantedId='';
+      try{wantedId=localStorage.getItem('posBtDeviceId')||''}catch(e){}
+      device=permitted.find(d=>wantedId&&d.id===wantedId)||permitted[0]||null;
+    }
+    if(!device){
+      setBTState('disconnected');
+      scheduleAutoReconnect(5000);
+      return;
+    }
+    setBTState('pairing');
+    await connectBLEPrinter(device,token);
+    toast('Printer tersambung otomatis: '+(device.name||'Printer BLE'));
+  }catch(e){
+    console.warn('Auto reconnect Bluetooth:',e);
+    if(token===btPairingToken)resetBTState();
+    // Coba lagi berkala sampai printer dinyalakan dan GATT tersedia.
+    scheduleAutoReconnect(5000);
+  }finally{
+    autoBTBusy=false;
   }
 }
 
@@ -1384,95 +1604,274 @@ function setBTState(s){
   }
 }
 
+// Sinkronkan indikator dengan status GATT yang sebenarnya, bukan hanya flag lama.
+function resetBTState(){
+  btDevice=null;
+  printCharacteristic=null;
+  btState='disconnected';
+  setBTState('disconnected');
+}
+function syncBTConnection(){
+  if(btState==='connected'){
+    const actuallyConnected=!!(btDevice?.gatt?.connected && printCharacteristic);
+    if(!actuallyConnected){
+      resetBTState();
+      return false;
+    }
+    return true;
+  }
+  return false;
+}
+// Polling membantu memperbarui tombol ketika printer mati/di luar jangkauan.
+setInterval(()=>{
+  if(btState==='connected') syncBTConnection();
+  else if(isAutoBTEnabled()) scheduleAutoReconnect(1000);
+},1500);
+window.addEventListener('pageshow',()=>{
+  if(btState==='connected') syncBTConnection();
+  else if(isAutoBTEnabled()) scheduleAutoReconnect(500);
+});
+document.addEventListener('visibilitychange',()=>{
+  if(!document.hidden && btState!=='connected' && isAutoBTEnabled()) scheduleAutoReconnect(500);
+});
+
 function openSettings(){state.screen='pengaturan';render()}
 function settingsHTML(){return `<section class="panel settings-shell"><div class="settings-window"><div class="report-titlebar"><div><b>⚙️ Pengaturan</b><div class="mini">Konfigurasi tempat, menu, QRIS, dan backup</div></div><button class="close" onclick="closeSettings()">×</button></div><div style="padding:16px"><div class="settingmenu"><button class="settingtab active">Umum</button><button class="settingtab" onclick="menuManager()">Daftar Menu</button><button class="settingtab" onclick="backupData()">Backup</button><button class="settingtab" onclick="restoreData()">Restore</button><button class="settingtab danger" onclick="wipe()">Hapus Semua Data</button></div><div class="grid2"><div class="field"><label>Nama Tempat</label><input id="setName" class="input" value="${esc(db.settings.name)}"></div><div class="field"><label>PPN (%)</label><input id="setTax" class="input" type="number" min="0" value="${db.settings.tax||''}"></div></div><div class="field"><label>Alamat</label><input id="setAddress" class="input" value="${esc(db.settings.address)}"></div><div class="grid2"><div class="field"><label>Logo Struk</label><input id="logoFile" type="file" accept="image/*" class="input"></div><div class="field"><label>QRIS</label><input id="qrisFile" type="file" accept="image/*" class="input"></div></div><button class="btn primary" onclick="saveSettings()">Simpan Pengaturan</button></div></section>`}
 function closeSettings(){state.screen='kasir';render()}
 function saveSettings(){const finish=(logo,qris)=>{db.settings.name=document.getElementById('setName').value.trim()||'Warkop';db.settings.address=document.getElementById('setAddress').value.trim();db.settings.tax=Number(document.getElementById('setTax').value)||0;if(logo)db.settings.logo=logo;if(qris)db.settings.qris=qris;save();toast('Pengaturan tersimpan.');render()};Promise.all([file64(document.getElementById('logoFile').files[0]),file64(document.getElementById('qrisFile').files[0])]).then(x=>finish(x[0],x[1]))}
 function file64(f){return new Promise(r=>{if(!f)return r('');const fr=new FileReader();fr.onload=()=>r(fr.result);fr.readAsDataURL(f)})}
-function menuManager(){modal(`<div class="modalhead"><h3>Daftar Menu</h3><button class="close" onclick="closeModal()">×</button></div><div class="notice">Tambah, edit, atau hapus menu. Foto disimpan lokal di perangkat.</div><div id="menuEditor">${menuEditorHTML()}</div>`)}
-function menuEditorHTML(){return `<div class="grid2"><div class="field"><label>Kategori</label><input id="mCat" class="input" placeholder="Kopi"></div><div class="field"><label>Nama Produk</label><input id="mName" class="input" placeholder="Nama menu"></div></div><div class="grid2"><div class="field"><label>Harga</label><input id="mPrice" class="input" type="number" placeholder="10000"></div><div class="field"><label>Foto</label><input id="mFile" class="input" type="file" accept="image/*"></div></div><button class="btn primary" onclick="addProduct()">+ Tambahkan</button><div class="scroll" style="margin-top:15px"><table><thead><tr><th>Menu</th><th>Kategori</th><th>Harga</th><th>Aksi</th></tr></thead><tbody>${db.products.map(p=>`<tr><td>${esc(p.name)}</td><td>${esc(p.cat)}</td><td>${rupiah(p.price)}</td><td><button class="btn light" onclick="editProduct('${p.id}')">Edit</button> <button class="btn danger" onclick="deleteProduct('${p.id}')">Hapus</button></td></tr>`).join('')}</tbody></table></div>`}
+function menuManager(){modal(`<div class="modalhead"><h3>Daftar Menu</h3><button class="close" onclick="closeModal()">×</button></div><div id="menuEditor">${menuEditorHTML()}</div>`)}
+function getCategoryOptions(selected = '') {
+  const categories = [
+    'Kopi',
+    'Non Kopi',
+    'Makanan',
+    'Cemilan',
+    'Additional',
+    'Lain-lain',
+    ...db.products.map(p => p.cat)
+  ];
+
+  const unique = [...new Set(categories.filter(Boolean))];
+
+  return `
+    <option value="">Pilih Kategori</option>
+    ${unique.map(c => `
+      <option value="${esc(c)}" ${c === selected ? 'selected' : ''}>
+        ${esc(c)}
+      </option>
+    `).join('')}
+  `;
+}
+function menuEditorHTML() {
+  return `
+    <div class="grid2">
+      <div class="field">
+        <label>Kategori</label>
+        <select id="mCat" class="select">
+          ${getCategoryOptions()}
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Nama Produk</label>
+        <input id="mName" class="input" placeholder="Nama menu">
+      </div>
+    </div>
+
+    <div class="grid2">
+      <div class="field">
+        <label>Harga</label>
+        <input id="mPrice" class="input" type="number" placeholder="10000">
+      </div>
+
+      <div class="field">
+        <label>Foto</label>
+        <input id="mFile" class="input" type="file" accept="image/*">
+      </div>
+    </div>
+
+    <button class="btn primary" onclick="addProduct()">
+      + Tambahkan
+    </button>
+
+    <div class="scroll" style="margin-top:15px">
+      <table>
+        <thead>
+          <tr>
+            <th>Menu</th>
+            <th>Kategori</th>
+            <th>Harga</th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${db.products.map(p => `
+            <tr>
+              <td>${esc(p.name)}</td>
+              <td>${esc(p.cat)}</td>
+              <td>${rupiah(p.price)}</td>
+              <td>
+                <button class="btn light" onclick="editProduct('${p.id}')">Edit</button>
+                <button class="btn danger" onclick="deleteProduct('${p.id}')">Hapus</button>
+              </td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
 function addProduct(){const cat=document.getElementById('mCat').value.trim(),name=document.getElementById('mName').value.trim(),price=Number(document.getElementById('mPrice').value);if(!cat||!name||!price)return toast('Kategori, nama, dan harga wajib diisi.');file64(document.getElementById('mFile').files[0]).then(img=>{db.products.push({id:'p'+Date.now(),cat,name,price,icon:iconFor(cat),img});save();menuManager();render()})}
-function editProduct(id){const p=db.products.find(x=>x.id===id);const n=prompt('Nama produk:',p.name);if(n===null)return;const h=prompt('Harga:',p.price);if(h===null)return;const c=prompt('Kategori:',p.cat);if(c===null)return;p.name=n.trim()||p.name;p.price=Number(h)||p.price;p.cat=c.trim()||p.cat;p.icon=iconFor(p.cat);save();menuManager();render()}
+function editProduct(id) {
+  const p = db.products.find(x => x.id === id);
+  if (!p) return;
+
+  modal(`
+    <div class="modalhead">
+      <h3>Edit Menu</h3>
+      <button class="close" onclick="closeModal()">×</button>
+    </div>
+
+    <div class="field">
+      <label>Nama Produk</label>
+      <input id="editName" class="input" value="${esc(p.name)}">
+    </div>
+
+    <div class="field">
+      <label>Harga</label>
+      <input id="editPrice" class="input" type="number" value="${p.price}">
+    </div>
+
+    <div class="field">
+      <label>Kategori</label>
+      <select id="editCat" class="select">
+        ${getCategoryOptions(p.cat)}
+      </select>
+    </div>
+
+    <button class="btn primary" style="width:100%"
+      onclick="saveEditedProduct('${p.id}')">
+      Simpan Perubahan
+    </button>
+  `);
+}
+
+function saveEditedProduct(id) {
+  const p = db.products.find(x => x.id === id);
+  if (!p) return;
+
+  const name = document.getElementById('editName').value.trim();
+  const price = Number(document.getElementById('editPrice').value);
+  const cat = document.getElementById('editCat').value;
+
+  if (!name || !price || !cat) {
+    return toast('Nama, harga, dan kategori wajib diisi.');
+  }
+
+  p.name = name;
+  p.price = price;
+  p.cat = cat;
+  p.icon = iconFor(cat);
+
+  save();
+  closeModal();
+  menuManager();
+}
 function deleteProduct(id){if(confirm('Hapus menu ini?')){db.products=db.products.filter(p=>p.id!==id);save();menuManager();render()}}
 function backupData(){const blob=new Blob([JSON.stringify(db,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='backup-warkop-'+dateKey()+'.json';a.click();toast('Backup dibuat.')}
 function restoreData(){const i=document.createElement('input');i.type='file';i.accept='.json,application/json';i.onchange=()=>{const f=i.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const x=JSON.parse(r.result);if(!x.settings||!x.products)throw 0;db=x;save();toast('Restore berhasil.');render()}catch(e){toast('File backup tidak valid.')}};r.readAsText(f)};i.click()}
 function wipe(){if(confirm('Hapus SEMUA data termasuk transaksi dan menu?')){localStorage.removeItem(KEY);db=load();state.cart=[];toast('Semua data dihapus.');render()}}
 function modal(html){const m=document.getElementById('modal');m.innerHTML=`<div class="modalbox">${html}</div>`;m.classList.remove('hidden')}
 function closeModal(){document.getElementById('modal').classList.add('hidden')}
-function generateOwnerDailyReportText(f,t,sh,sales){
-  const totalItem=sales.reduce((sum,s)=>sum+(s.items||[]).reduce((a,x)=>a+Number(x.qty||0),0),0);
-  const totalPenjualan=sales.reduce((sum,s)=>sum+Number(s.total||0),0);
+function generateOwnerDailyReportText(f, t, sh, sales) {
+  const totalItem = sales.reduce((sum, s) => sum + (s.items || []).reduce((a, x) => a + Number(x.qty || 0), 0), 0);
+  const totalPenjualan = sales.reduce((sum, s) => sum + Number(s.total || 0), 0);
 
-  const payments={};
-  sales.forEach(s=>{
-    const method=(s.method||'Lainnya').trim()||'Lainnya';
-    payments[method]=(payments[method]||0)+Number(s.total||0);
+  const payments = {};
+  sales.forEach(s => {
+    const method = (s.method || 'Lainnya').trim() || 'Lainnya';
+    payments[method] = (payments[method] || 0) + Number(s.total || 0);
   });
 
-  const shifts={};
-  sales.forEach(s=>{
-    const key=String(s.shift||'-');
-    if(!shifts[key])shifts[key]={count:0,total:0};
+  const shifts = {};
+  sales.forEach(s => {
+    const key = String(s.shift || '-');
+    if (!shifts[key]) shifts[key] = { count: 0, total: 0 };
     shifts[key].count++;
-    shifts[key].total+=Number(s.total||0);
+    shifts[key].total += Number(s.total || 0);
   });
 
-  const dateLabel=f===t
-    ? `${String(Number(f.slice(8,10)))} / ${String(Number(f.slice(5,7)))} / ${f.slice(0,4)}`
-    : `${String(Number(f.slice(8,10)))} / ${String(Number(f.slice(5,7)))} / ${f.slice(0,4)} - ${String(Number(t.slice(8,10)))} / ${String(Number(t.slice(5,7)))} / ${t.slice(0,4)}`;
+  const dateLabel = f === t
+    ? `${String(Number(f.slice(8, 10)))} / ${String(Number(f.slice(5, 7)))} / ${f.slice(0, 4)}`
+    : `${String(Number(f.slice(8, 10)))} / ${String(Number(f.slice(5, 7)))} / ${f.slice(0, 4)}\n${String(Number(t.slice(8, 10)))} / ${String(Number(t.slice(5, 7)))} / ${t.slice(0, 4)}`;
 
-  const W=32;
-  const line='-'.repeat(W);
-  const padRow=(label,value)=>{
-    label=String(label); value=String(value);
-    const spaces=Math.max(1,W-label.length-value.length);
-    return label+' '.repeat(spaces)+value+'\n';
+  // Mengambil tanggal & jam cetak saat ini (tanpa detik)
+  const now = new Date();
+  const printDate = `${String(now.getDate()).padStart(2, '0')}/${String(now.getMonth() + 1).padStart(2, '0')}/${now.getFullYear()} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+
+  const W = 32;
+  const line = '-'.repeat(W);
+  const padRow = (label, value) => {
+    label = String(label); value = String(value);
+    const spaces = Math.max(1, W - label.length - value.length);
+    return label + ' '.repeat(spaces) + value + '\n';
   };
-  const center=(text)=>{
-    text=String(text);
-    const left=Math.max(0,Math.floor((W-text.length)/2));
-    return ' '.repeat(left)+text+'\n';
+  const center = (text) => {
+    text = String(text);
+    const left = Math.max(0, Math.floor((W - text.length) / 2));
+    return ' '.repeat(left) + text + '\n';
   };
 
-  let text='';
-  text+=center((db.settings.name||'WARKOP').toUpperCase());
-  text+=center('LAPORAN PENJUALAN HARIAN');
-  text+='\n';
-  text+=`Tanggal : ${dateLabel}\n`;
-  if(sh) text+=`Shift   : ${sh}\n`;
-  text+=line+'\n';
-  text+=padRow('Transaksi',sales.length);
-  text+=padRow('Total Item',totalItem);
-  text+=padRow('Penjualan',rupiah(totalPenjualan));
-  text+=line+'\n';
-  text+='PEMBAYARAN\n';
+  let text = '';
+  // Nama toko dibuat tebal, rata tengah, dan double-height pada printer ESC/POS 58 mm.
+  const reportStoreName = (db.settings.name || 'WARKOP').toUpperCase();
+  text += '\x1b\x61\x01' + '\x1b\x45\x01' + '\x1d\x21\x10' +
+    reportStoreName + '\x1d\x21\x00' + '\x1b\x45\x00\n' + '\x1b\x61\x00';
+  text += center('LAPORAN PENJUALAN HARIAN');
+  text += '\n';
+  text += `Tanggal : ${dateLabel}\n`;
+  if (sh) text += `Shift   : ${sh}\n`;
+  text += line + '\n';
+  text += padRow('Transaksi', sales.length);
+  text += padRow('Total Item', totalItem);
+  text += padRow('Penjualan', rupiah(totalPenjualan));
+  text += line + '\n';
+  text += 'PEMBAYARAN\n';
 
-  const paymentKeys=Object.keys(payments);
-  if(paymentKeys.length){
-    paymentKeys.forEach(method=>{
-      text+=padRow(method,rupiah(payments[method]));
+  const paymentKeys = Object.keys(payments);
+  if (paymentKeys.length) {
+    paymentKeys.forEach(method => {
+      text += padRow(method, rupiah(payments[method]));
     });
-  }else{
-    text+=padRow('-',rupiah(0));
+  } else {
+    text += padRow('-', rupiah(0));
   }
 
-  text+=line+'\n';
-  text+='REKAP PER SHIFT\n';
+  text += line + '\n';
+  text += 'REKAP PER SHIFT\n';
 
-  const shiftOrder=['1','2','3'];
-  const existing=Object.keys(shifts).filter(x=>!shiftOrder.includes(x));
-  const shiftKeys=[...shiftOrder.filter(x=>shifts[x]),...existing];
-  if(shiftKeys.length){
-    shiftKeys.forEach(k=>{
-      text+=padRow(`Shift ${k} (${shifts[k].count} trx)`,rupiah(shifts[k].total));
+  const shiftOrder = ['1', '2', '3'];
+  const existing = Object.keys(shifts).filter(x => !shiftOrder.includes(x));
+  const shiftKeys = [...shiftOrder.filter(x => shifts[x]), ...existing];
+  if (shiftKeys.length) {
+    shiftKeys.forEach(k => {
+      text += padRow(`Shift ${k} (${shifts[k].count} trx)`, rupiah(shifts[k].total));
     });
-  }else{
-    text+=padRow('Shift - (0 trx)',rupiah(0));
+  } else {
+    text += padRow('Shift - (0 trx)', rupiah(0));
   }
 
-  text+=line+'\n';
-  text+=padRow('TOTAL PENJUALAN',rupiah(totalPenjualan));
-  text+='\n\n';
+  text += line + '\n';
+  text += padRow('TOTAL PENJUALAN', rupiah(totalPenjualan));
+  text += line + '\n';
+  
+  // Perintah ESC/POS untuk Font Kecil (Font B)
+  const FONT_SMALL_ON = '\x1b\x4d\x01';
+  const FONT_NORMAL = '\x1b\x4d\x00';
+  text += center(`${FONT_SMALL_ON}Dicetak: ${printDate}${FONT_NORMAL}`);
+
+  text += '\n\n';
   return text;
 }
 
@@ -1597,7 +1996,8 @@ async function printOwnerReportPreview() {
     return;
   }
 
-  const plainText = preview.dataset.plainText || '';
+  const sForPreview = db.sales.find(x => x.id === preview.dataset.saleId);
+  const plainText = sForPreview ? generateReceiptText(sForPreview, preview.dataset.void === '1', preview.dataset.reprint === '1') : (preview.dataset.plainText || '');
 
   if (!plainText.trim()) {
     toast('Isi laporan kosong.');
@@ -1605,7 +2005,7 @@ async function printOwnerReportPreview() {
   }
 
   // 1. Bluetooth Direct: khusus laporan.
-  if (btState === 'connected' && printCharacteristic) {
+  if (syncBTConnection()) {
     try {
       toast('Mengirim laporan ke printer...');
 
@@ -1682,7 +2082,7 @@ async function printOwnerDailyReport() {
   );
 
   // Jika Bluetooth Direct terhubung, gunakan fungsi khusus laporan.
-  if (btState === 'connected' && printCharacteristic) {
+  if (syncBTConnection()) {
     try {
       toast('Sedang mengirim laporan ke printer...');
 
@@ -1847,6 +2247,7 @@ function start(){
  }
 }
 start();
+setTimeout(()=>{if(isAutoBTEnabled())autoReconnectBluetooth()},1200);
 </script>
 
 <script>
