@@ -608,7 +608,7 @@ body {
 <div id="login" class="login">
   <div class="loginbox">
     <div class="loginlogo">☕</div><h2 style="text-align:center;margin:5px 0">POS Kasir</h2>
-    <div class="field"><label>Nama Kasir</label><input id="loginName" class="input" placeholder="Nama kasir" autocomplete="name" oninput="formatLoginNameInput(this)"></div>
+    <div class="field"><label>Nama Kasir</label><input id="loginName" class="input" placeholder="Nama kasir"></div>
     <div class="field"><label>Shift</label><select id="loginShift" class="select"><option value="1">Shift 1</option><option value="2">Shift 2</option><option value="3">Shift 3</option></select></div>
     <button class="btn primary" style="width:100%;margin-top:6px" onclick="login()">Masuk</button>
     <button class="btn light" style="width:100%;margin-top:8px" onclick="openReport(true)">Lihat Laporan</button>
@@ -616,25 +616,8 @@ body {
 </div>
 <div id="modal" class="modal hidden"></div>
 <div id="toast" class="toast hidden"></div>
-<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script>
 const KEY='warkopKasirV1';
-const TERMINAL_KEY='warkopKasirTerminalV1';
-const DEVICE_KEY='warkopKasirDeviceV1';
-let currentTerminalId=localStorage.getItem(TERMINAL_KEY)||'KASIR-A';
-let terminalWasSaved=!!localStorage.getItem(TERMINAL_KEY);
-let terminalLeaseLost=false;
-let deviceId=localStorage.getItem(DEVICE_KEY);
-if(!deviceId){deviceId='DEV-'+(crypto.randomUUID?crypto.randomUUID():Date.now().toString(36)+'-'+Math.random().toString(36).slice(2));localStorage.setItem(DEVICE_KEY,deviceId)}
-function rememberTerminal(id){if(!['KASIR-A','KASIR-B'].includes(id))return;currentTerminalId=id;localStorage.setItem(TERMINAL_KEY,id)}
-function terminalOf(record){return String(record?.terminalId||'KASIR-A')}
-function belongsToCurrentTerminal(record){return terminalOf(record)===currentTerminalId}
-function terminalRecords(list){return (Array.isArray(list)?list:[]).filter(belongsToCurrentTerminal)}
-const GOOGLE_SHEETS_URL='https://script.google.com/macros/s/AKfycbyk8xVuoQX4ZsJBhHH4KgSM7kO6w8hqO9LIniUj0n350gRp2phb-0TRrVKFLUse9iqv1Q/exec';
-let syncTimer=null, syncBusy=false, syncStatus='Menyiapkan koneksi Google Sheets';
-// Fail-safe: do not upload anything until this session has successfully loaded server data.
-let cloudReady=false;
-let localSnapshotAtBoot=(()=>{try{return !!JSON.parse(localStorage.getItem(KEY))}catch(e){return false}})();
 const PRINTER_SERVICES = [
   '00001101-0000-1000-8000-00805f9b34fb', // SPP Standard Serial Port Profile
   '49535343-fe7d-4ae5-8fa9-9fafd205e455', // ISSC Thermal Printer
@@ -660,123 +643,21 @@ function load(){
    return d;
  }catch(e){return structuredClone(defaults)}
 }
-function save(){
-  localStorage.setItem(KEY,JSON.stringify(db));
-  saveLocalMirror(db);
-  scheduleCloudSync();
-}
-const IDB_NAME='warkopKasirDurable', IDB_STORE='state';
-function openLocalDB(){
- return new Promise((resolve,reject)=>{
-  if(!('indexedDB' in window)) return reject(new Error('IndexedDB tidak tersedia'));
-  const req=indexedDB.open(IDB_NAME,1);
-  req.onupgradeneeded=()=>{if(!req.result.objectStoreNames.contains(IDB_STORE))req.result.createObjectStore(IDB_STORE)};
-  req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error);
- });
-}
-async function saveLocalMirror(value){
- try{const idb=await openLocalDB();await new Promise((resolve,reject)=>{const tx=idb.transaction(IDB_STORE,'readwrite');tx.objectStore(IDB_STORE).put(value,'db');tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error)});idb.close()}catch(e){console.warn('Mirror lokal gagal',e)}
-}
-async function restoreLocalMirror(){
- try{const idb=await openLocalDB();const value=await new Promise((resolve,reject)=>{const tx=idb.transaction(IDB_STORE,'readonly');const req=tx.objectStore(IDB_STORE).get('db');req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error)});idb.close();if(value){localSnapshotAtBoot=true;if(!db.sales?.length || (value.sales||[]).length>(db.sales||[]).length){db=value;localStorage.setItem(KEY,JSON.stringify(db));if(typeof start==='function')start()}}}catch(e){console.warn(e)}
-}
-function apiUrl(){return GOOGLE_SHEETS_URL.trim()}
-function scheduleCloudSync(){clearTimeout(syncTimer);syncTimer=setTimeout(()=>syncCloud(false),1200)}
-function isPristineLocalDefaults(){const products=db.products||[];const defaultProducts=defaults.products||[];const sameProducts=products.length===defaultProducts.length&&products.every(p=>{const d=defaultProducts.find(x=>String(x.id)===String(p.id));return !!d&&p.cat===d.cat&&p.name===d.name&&Number(p.price)===Number(d.price)&&(p.icon||'')===(d.icon||'')&&(p.img||'')===(d.img||'')});const st=db.settings||{};const sameSettings=(st.name||'Warkop')==='Warkop'&&!(st.address||'')&&!Number(st.tax||0)&&!(st.logo||'')&&!(st.qris||'');return sameProducts&&sameSettings&&!(db.sales||[]).length&&!(db.voids||[]).length&&!(db.shiftSessions||[]).length&&!(db.pending||[]).length}
-function mergeCloudData(local,remote,preferRemote=false){
- if(!remote)return local;
- const mergeBy=(a,b,key)=>{const m=new Map();const first=preferRemote?(a||[]):(b||[]),second=preferRemote?(b||[]):(a||[]);[...first,...second].forEach(x=>{const id=x[key]??(key==='id'?x.saleId:undefined);if(id==null)return;const k=String(id),old=m.get(k);if(!old){m.set(k,x);return}const merged={...old,...x};if(key==='id'&&(!x.img)&&old.img)merged.img=old.img;m.set(k,merged)});return [...m.values()]};
- local.products=mergeBy(local.products,remote.products,'id');
- local.sales=mergeBy(local.sales,remote.sales,'id');
- local.voids=mergeBy(local.voids,remote.voids,'saleId');
- local.shiftSessions=mergeBy(local.shiftSessions,remote.shiftSessions,'id');
- local.pending=mergeBy(local.pending,remote.pending,'id');
- const localSettings=local.settings||{},remoteSettings=remote.settings||{};
- local.settings=preferRemote?{...localSettings,...remoteSettings}:{...remoteSettings,...localSettings};
- ['logo','qris'].forEach(k=>{if(!local.settings[k])local.settings[k]=remoteSettings[k]||localSettings[k]||''});
- local.lastNo=Math.max(Number(local.lastNo||0),Number(remote.lastNo||0));
- // Runtime aktif dipulihkan dari server pada perangkat baru hanya ketika server dipilih sebagai sumber utama.
- if(remote.runtime && typeof remote.runtime==='object') local.runtime=remote.runtime;
- return local;
-}
-async function syncCloud(showMessage=false){
- const url=apiUrl();
- if(!url){syncStatus='URL Google Apps Script belum tersedia';updateSyncIndicator();return false}
- if(!cloudReady){syncStatus='Menunggu data Google Sheets dimuat';updateSyncIndicator();if(showMessage)toast('Belum mengirim data: muat data Google Sheets dahulu agar data kosong tidak menimpa server.');return false}
- if(syncBusy||!navigator.onLine)return false;
- syncBusy=true;syncStatus='Menyinkronkan…';updateSyncIndicator();
- try{
-  const response=await fetch(url,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'sync',terminalId:currentTerminalId,deviceId,data:db}),redirect:'follow'});
-  if(!response.ok)throw new Error('HTTP '+response.status);
-  const result=await response.json();
-  if(!result||result.ok!==true){if(result?.code==='TERMINAL_TAKEN'){terminalLeaseLost=true;syncStatus='Terminal sudah diambil alih perangkat lain';}throw new Error(result?.error||'Respons server tidak valid')}
-  db=mergeCloudData(db,result.data,false);localSnapshotAtBoot=true;localStorage.setItem(KEY,JSON.stringify(db));await saveLocalMirror(db);
-  syncStatus='Tersinkron '+new Date().toLocaleTimeString('id-ID');
-  if(showMessage)toast('Sinkronisasi Google Sheets berhasil.');
-  return true;
- }catch(e){
-  console.warn('Sinkronisasi gagal; data tetap lokal:',e);
-  syncStatus='Offline / menunggu sinkronisasi';
-  if(showMessage)toast('Belum tersinkron. Data tetap tersimpan lokal; sinkronisasi dicoba lagi setelah server berhasil dimuat.');
-  return false;
- }finally{syncBusy=false;updateSyncIndicator()}
-}
-// Panggil endpoint GET Apps Script melalui JSONP agar browser tidak memblokir CORS.
-let jsonpCounter=0;
-function googleJsonp(params, timeoutMs=20000){
- return new Promise((resolve,reject)=>{
-  const callbackName='__warkopJsonp_'+Date.now()+'_'+(++jsonpCounter);
-  const script=document.createElement('script');
-  const query=new URLSearchParams({...params,callback:callbackName,_:Date.now()});
-  let timer;
-  const cleanup=()=>{
-   if(timer)clearTimeout(timer);
-   try{delete window[callbackName]}catch(_){window[callbackName]=undefined}
-   if(script.parentNode)script.parentNode.removeChild(script);
-  };
-  window[callbackName]=(data)=>{cleanup();resolve(data)};
-  script.onerror=()=>{cleanup();reject(new Error('Gagal memuat respons JSONP dari Google Apps Script'))};
-  timer=setTimeout(()=>{cleanup();reject(new Error('Waktu tunggu Google Apps Script habis'))},timeoutMs);
-  script.src=apiUrl()+(apiUrl().includes('?')?'&':'?')+query.toString();
-  script.async=true;
-  document.head.appendChild(script);
- });
-}
-async function pullCloud(showMessage=false){
- const url=apiUrl();if(!url||!navigator.onLine){cloudReady=false;return false}
- try{
-  const j=await googleJsonp({action:'load',terminalId:currentTerminalId});
-  if(!j?.ok||!j.data)throw new Error(j?.error||'Data Google Sheets tidak valid');
-  const preferRemote=!localSnapshotAtBoot||isPristineLocalDefaults();
-  db=mergeCloudData(db,j.data,preferRemote);
-  if(!j.data.runtime && String(db.runtime?.terminalId||'KASIR-A')!==currentTerminalId)db.runtime={terminalId:currentTerminalId,deviceId,cashier:'',shift:'',sessionId:null,cart:[],category:'Semua',discountType:'Rp',discount:0};
-  cloudReady=true;localSnapshotAtBoot=true;
-  localStorage.setItem(KEY,JSON.stringify(db));await saveLocalMirror(db);
-  syncStatus='Data server dimuat';updateSyncIndicator();
-  if(showMessage){render();toast('Data Google Sheets berhasil dimuat.')}
-  return true;
- }catch(e){cloudReady=false;syncStatus='Belum terhubung ke Google Sheets';console.warn('Tidak dapat memuat Google Sheets:',e);updateSyncIndicator();return false}
-}
-function updateSyncIndicator(){
- const el=document.getElementById('cloudSyncStatus');
- if(el)el.textContent=(navigator.onLine?'☁ ':'⚠ ')+syncStatus;
-}
-window.addEventListener('online',async()=>{syncStatus='Internet kembali';updateSyncIndicator();const loaded=await pullCloud(false);if(loaded)await syncCloud(false)});
-window.addEventListener('offline',()=>{syncStatus='Offline / antrean lokal';updateSyncIndicator()});
-
+function save(){localStorage.setItem(KEY,JSON.stringify(db))}
 function persistRuntime(){
- db.runtime={terminalId:currentTerminalId,deviceId, cashier:state.cashier,shift:state.shift,sessionId:state.sessionId,
+ db.runtime={
+   cashier:state.cashier,shift:state.shift,sessionId:state.sessionId,
    cart:state.cart,category:state.category,discountType:state.discountType,discount:state.discount
  };
  save();
 }
 function clearRuntime(){
- db.runtime={terminalId:currentTerminalId,deviceId,cashier:'',shift:'',sessionId:null,cart:[],category:'Semua',discountType:'Rp',discount:0};
+ db.runtime={cashier:'',shift:'',sessionId:null,cart:[],category:'Semua',discountType:'Rp',discount:0};
  save();
 }
 function restoreRuntime(){
  const r=db.runtime;
- if(!r||!r.cashier||!r.sessionId||String(r.terminalId||'KASIR-A')!==currentTerminalId)return;
+ if(!r||!r.cashier||!r.sessionId)return;
  const s=getSession(r.sessionId);
  if(!s||s.closed){clearRuntime();return;}
  state.cashier=r.cashier;state.shift=r.shift;state.sessionId=r.sessionId;
@@ -792,9 +673,6 @@ function dateKey(d=new Date()){
  return `${y}-${m}-${day}`;
 }
 function shiftBusinessDate(s,d=new Date()){let x=new Date(d);if(String(s)==='3' && x.getHours()<7)x.setDate(x.getDate()-1);return dateKey(x)}
-function normalizeCashierName(value){return String(value||'').trim().replace(/\s+/g,' ').toLocaleLowerCase('id-ID')}
-function formatCashierName(value){return String(value||'').trim().replace(/\s+/g,' ').split(' ').filter(Boolean).map(part=>part.charAt(0).toLocaleUpperCase('id-ID')+part.slice(1).toLocaleLowerCase('id-ID')).join(' ')}
-function formatLoginNameInput(input){const start=input.selectionStart,end=input.selectionEnd;const formatted=formatCashierName(input.value);if(input.value!==formatted){input.value=formatted;try{input.setSelectionRange(start,end)}catch(e){}}}
 function toast(t){const el=document.getElementById('toast');el.textContent=t;el.classList.remove('hidden');setTimeout(()=>el.classList.add('hidden'),2600)}
 function showPaymentNotice(title,message,type='success'){
  const old=document.getElementById('paymentNoticeBackdrop'); if(old)old.remove();
@@ -807,90 +685,33 @@ function showPaymentNotice(title,message,type='success'){
 }
 function closePaymentNotice(){const el=document.getElementById('paymentNoticeBackdrop');if(el)el.remove()}
 function iconFor(c){return {Kopi:'☕','Non Kopi':'🥤',Makanan:'🍛',Cemilan:'🍟',Additional:'➕'}[c]||'🍽️'}
-function getSession(id){return (db.shiftSessions||[]).find(s=>s.id===id&&belongsToCurrentTerminal(s))}
+function getSession(id){return (db.shiftSessions||[]).find(s=>s.id===id)}
 function getActiveSession(shift,bizDate=shiftBusinessDate(shift)){
- return (db.shiftSessions||[]).find(s=>belongsToCurrentTerminal(s)&&s.shift===String(shift)&&s.businessDate===bizDate&&!s.closed);
+ return (db.shiftSessions||[]).find(s=>s.shift===String(shift)&&s.businessDate===bizDate&&!s.closed);
 }
 function createShiftSession(name,shift){
  const businessDate=shiftBusinessDate(shift);
  let existing=getActiveSession(shift,businessDate);
  if(existing){
-   if(normalizeCashierName(existing.cashier)!==normalizeCashierName(name)){
-     if(!confirm(`Shift ${shift} sedang aktif atas nama ${existing.cashier}. Apakah anda berwenang mengambil alih shift ini?`)) return null;
+   if(existing.cashier!==name){
+     if(!confirm(`Shift ${shift} sedang aktif atas nama ${existing.cashier}. Apakah anda akan menggunakan shift ${shift} lagi?`)) return null;
    }
-   if(normalizeCashierName(existing.cashier)===normalizeCashierName(name)) existing.cashier=formatCashierName(name);
    return existing;
  }
- const prior=(db.shiftSessions||[]).find(s=>belongsToCurrentTerminal(s)&&s.shift===String(shift)&&s.businessDate===businessDate&&s.closed);
+ const prior=(db.shiftSessions||[]).find(s=>s.shift===String(shift)&&s.businessDate===businessDate&&s.closed);
  if(prior && !confirm(`Apakah anda akan menggunakan shift ${shift} lagi?`)) return null;
- const session={id:'S'+Date.now()+'_'+Math.random().toString(36).slice(2,7),terminalId:currentTerminalId,deviceId, date:new Date().toISOString(),businessDate,cashier:name,shift:String(shift),closed:false,closedAt:null};
+ const session={id:'S'+Date.now()+'_'+Math.random().toString(36).slice(2,7),date:new Date().toISOString(),businessDate,cashier:name,shift:String(shift),closed:false,closedAt:null};
  db.shiftSessions=db.shiftSessions||[];
  db.shiftSessions.push(session);
  save();
  return session;
 }
-async function autoAssignTerminal(){
- try{
-  const j=await googleJsonp({action:'autoAssignTerminal',deviceId});
-  if(!j?.ok)throw new Error(j?.error||'Terminal otomatis tidak tersedia');
-  rememberTerminal(j.terminalId);terminalWasSaved=true;return j;
- }catch(e){console.warn('Auto assign terminal gagal',e);return {ok:false,error:'Gagal mengenali perangkat ke server. Pastikan Code.gs versi terbaru sudah di-deploy. ('+(e.message||'fetch gagal')+')'}}
-}
-async function claimTerminal(takeover){
- try{
-  const j=await googleJsonp({action:'claimTerminal',terminalId:currentTerminalId,deviceId,takeover:takeover?'true':'false'});
-  return j;
- }catch(e){console.warn('Claim terminal gagal',e);return {ok:false,error:'Gagal memverifikasi perangkat ke server. Pastikan Code.gs versi terbaru sudah di-deploy. ('+(e.message||'fetch gagal')+')'}}
-}
-setInterval(async()=>{
- if(!state.cashier||!navigator.onLine||!apiUrl()||terminalLeaseLost)return;
- const check=await claimTerminal(false);
- if(check?.conflict){terminalLeaseLost=true;syncStatus='Terminal diambil alih perangkat lain';updateSyncIndicator();toast('Peringatan: terminal ini telah diambil alih perangkat lain. Pembayaran baru diblokir.');}
-},45000);
-async function login(){
- const name=formatCashierName(document.getElementById('loginName').value), shift=String(document.getElementById('loginShift').value);
- document.getElementById('loginName').value=name;
+function login(){
+ const name=document.getElementById('loginName').value.trim(), shift=document.getElementById('loginShift').value;
  if(!name)return toast('Nama kasir wajib diisi.');
- // Perangkat baru otomatis mendapat terminal yang masih tersedia; perangkat lama memakai identitas tersimpan.
- if(!navigator.onLine||!apiUrl())return toast('Koneksi server diperlukan untuk masuk dan mengenali perangkat kasir.');
- if(!terminalWasSaved){const assigned=await autoAssignTerminal();if(!assigned?.ok)return toast(assigned?.error||'Terminal otomatis tidak tersedia. Hubungi owner untuk pemindahan perangkat.')}
- const loaded=await pullCloud(false);
- if(!loaded)return toast('Google Sheets belum bisa dimuat. Periksa internet sebelum masuk agar sesi tidak terduplikasi.');
- const runtimeBeforeClaim=db.runtime||{};
- const sessionBeforeClaim=runtimeBeforeClaim.sessionId?getSession(runtimeBeforeClaim.sessionId):null;
- if(runtimeBeforeClaim.cashier&&runtimeBeforeClaim.sessionId&&sessionBeforeClaim&&!sessionBeforeClaim.closed && (normalizeCashierName(runtimeBeforeClaim.cashier)!==normalizeCashierName(name)||String(runtimeBeforeClaim.shift)!==shift)){
-   return toast(`Terminal ${currentTerminalId} masih memiliki shift aktif atas nama ${runtimeBeforeClaim.cashier}, Shift ${runtimeBeforeClaim.shift}. Gunakan nama dan shift yang sama untuk pemindahan perangkat.`);
- }
- let claim=await claimTerminal(false);
- if(claim?.conflict){
-   const ok=confirm(`Terminal ${currentTerminalId} masih terikat ke perangkat lain (${claim.deviceId||'perangkat sebelumnya'}).
-
-Jika ambil alih, perangkat lama akan diblokir pada sinkronisasi berikutnya. Pastikan transaksi lokal yang belum tersinkron sudah dipulihkan.
-
-Lanjutkan pemindahan terminal?`);
-   if(!ok)return;
-   claim=await claimTerminal(true);
- }
- if(!claim?.ok)return toast(claim?.error||'Terminal gagal diambil alih.');
- terminalLeaseLost=false;
- const runtime=db.runtime||{};
- const runtimeSession=runtime.sessionId?getSession(runtime.sessionId):null;
- if(runtime.cashier && runtime.sessionId && runtimeSession && !runtimeSession.closed){
-   if(normalizeCashierName(runtime.cashier)!==normalizeCashierName(name) || String(runtime.shift)!==shift){
-     return toast(`Masih ada kasiran aktif atas nama ${runtime.cashier}, Shift ${runtime.shift}. Gunakan nama dan shift yang sama untuk melanjutkan.`);
-   }
-   state.cashier=formatCashierName(runtime.cashier);state.shift=String(runtime.shift);state.sessionId=runtime.sessionId;
-   state.cart=Array.isArray(runtime.cart)?runtime.cart:[];
-   state.category=runtime.category||'Semua';state.discountType=runtime.discountType||'Rp';state.discount=Number(runtime.discount||0);
-   state.screen='kasir';state.reportGuest=false;
-   persistRuntime();render();document.getElementById('login').classList.add('hidden');
-   toast('Shift lama berhasil dilanjutkan dari Google Sheets.');
-   return;
- }
  const session=createShiftSession(name,shift);
  if(!session)return;
  state.cashier=name;state.shift=shift;state.sessionId=session.id;state.screen='kasir';state.reportGuest=false;
- state.cart=[];state.discount=0;
  persistRuntime();
  render();document.getElementById('login').classList.add('hidden');
 }
@@ -910,9 +731,9 @@ function render(){
 setInterval(updateClock,1000);
 function updateClock(){const e=document.getElementById('clock');if(e)e.textContent=now().toLocaleString('id-ID',{dateStyle:'short',timeStyle:'medium'})}
 function cashierHTML(){
- const cats=['Semua',...new Set((db.products||[]).map(p=>p.cat).filter(Boolean))];
+ const cats=['Semua','Kopi','Non Kopi','Makanan','Cemilan','Additional','Lain-lain'];
  const q=window.menuQ||'';
- const ps=db.products.filter(p=>!p.deleted&&(state.category==='Semua'||p.cat===state.category)&&(`${p.name} ${p.cat}`).toLowerCase().includes(q.toLowerCase()));
+ const ps=db.products.filter(p=>(state.category==='Semua'||p.cat===state.category)&&(`${p.name} ${p.cat}`).toLowerCase().includes(q.toLowerCase()));
  return `<section class="panel menu-panel"><div class="toolbar"><input class="input search" value="${esc(q)}" oninput="window.menuQ=this.value;filterMenuProducts()" placeholder="🔎 Cari menu..."></div><div class="cats">${cats.map(c=>`<button class="cat ${state.category===c?'active':''}" onclick="state.category='${c}';render()">${c}</button>`).join('')}</div><div class="products">${ps.length?ps.map(p=>`<button class="product" onclick="addCart('${p.id}')"><div class="pic">${p.img?`<img src="${p.img}">`:iconFor(p.cat)}</div><div class="pinfo"><div class="pname">${esc(p.name)}</div><div class="price">${rupiah(p.price)}</div></div></button>`).join(''):'<div class="empty" style="grid-column:1/-1">Menu tidak ditemukan.</div>'}</div></section>${cartHTML()}`;
 }
 function filterMenuProducts(){
@@ -978,28 +799,27 @@ function updateCartTotalsOnly(){
  const title=root.querySelector('.discount-title b'); if(title)title.textContent='-'+rupiah(disc);
 }
 function pendingList(){
- const list=terminalRecords(db.pending);
+ const list=db.pending||[];
  if(!list.length){toast('Belum ada transaksi pending.');return;}
  modal(`<div class="modalhead"><h3 style="margin:0;font-size:16px">Daftar Pending</h3><button class="close" onclick="closeModal()">×</button></div>
  <div>${list.map((p,i)=>`<div class="pending-row"><div><b>${esc(p.id)}</b><div class="mini">${esc(p.cashier||'')} • Shift ${esc(String(p.shift||''))} • ${p.cart.length} item</div></div><div style="display:flex;gap:6px"><button class="btn primary" onclick="resumePending('${p.id}')">Lanjut</button><button class="btn danger" onclick="deletePending('${p.id}')">Hapus</button></div></div>`).join('')}</div>`);
 }
 function resumePending(id){
- const p=(db.pending||[]).find(x=>x.id===id&&belongsToCurrentTerminal(x)); if(!p)return;
+ const p=(db.pending||[]).find(x=>x.id===id); if(!p)return;
  state.cart=p.cart||[];state.discount=p.discount||0;state.discountType=p.discountType||'Rp';
  persistRuntime();
  db.pending=db.pending.filter(x=>x.id!==id);save();closeModal();render();toast('Transaksi pending dilanjutkan.');
 }
 function deletePending(id){
- db.pending=db.pending.filter(x=>x.id!==id||!belongsToCurrentTerminal(x));save();closeModal();pendingList();
+ db.pending=db.pending.filter(x=>x.id!==id);save();closeModal();pendingList();
 }
-function addCart(id){if(terminalLeaseLost)return toast('Terminal ini sudah diambil alih perangkat lain.');const p=db.products.find(x=>x.id===id);if(!p)return;const x=state.cart.find(x=>x.id===id);if(x)x.qty++;else state.cart.push({...p,qty:1});persistRuntime();render()}
-function changeQty(id,n){if(terminalLeaseLost)return toast('Terminal ini sudah diambil alih perangkat lain.');const x=state.cart.find(x=>x.id===id);if(!x)return;x.qty+=n;if(x.qty<=0)state.cart=state.cart.filter(y=>y.id!==id);persistRuntime();render()}
-function removeCart(id){if(terminalLeaseLost)return toast('Terminal ini sudah diambil alih perangkat lain.');state.cart=state.cart.filter(x=>x.id!==id);persistRuntime();render()}
-function clearCart(){if(terminalLeaseLost)return toast('Terminal ini sudah diambil alih perangkat lain.');if(state.cart.length&&confirm('Kosongkan keranjang?')){state.cart=[];state.discount=0;persistRuntime();render()}}
+function addCart(id){const p=db.products.find(x=>x.id===id);if(!p)return;const x=state.cart.find(x=>x.id===id);if(x)x.qty++;else state.cart.push({...p,qty:1});persistRuntime();render()}
+function changeQty(id,n){const x=state.cart.find(x=>x.id===id);if(!x)return;x.qty+=n;if(x.qty<=0)state.cart=state.cart.filter(y=>y.id!==id);persistRuntime();render()}
+function removeCart(id){state.cart=state.cart.filter(x=>x.id!==id);persistRuntime();render()}
+function clearCart(){if(state.cart.length&&confirm('Kosongkan keranjang?')){state.cart=[];state.discount=0;persistRuntime();render()}}
 function pending(){
- if(terminalLeaseLost)return toast('Terminal ini sudah diambil alih perangkat lain. Login ulang dan pulihkan shift terlebih dahulu.');
  if(!state.cart.length)return toast('Keranjang kosong.');
- db.pending.push({id:'P'+Date.now()+'-'+Math.random().toString(36).slice(2,6),terminalId:currentTerminalId,deviceId,sessionId:state.sessionId,businessDate:getSession(state.sessionId)?.businessDate||shiftBusinessDate(state.shift),cashier:state.cashier,shift:state.shift,cart:state.cart,discount:state.discount,discountType:state.discountType,created:new Date().toISOString()});state.cart=[];state.discount=0;persistRuntime();toast('Transaksi dipending.');render()
+ db.pending.push({id:'P'+Date.now(),sessionId:state.sessionId,businessDate:getSession(state.sessionId)?.businessDate||shiftBusinessDate(state.shift),cashier:state.cashier,shift:state.shift,cart:state.cart,discount:state.discount,discountType:state.discountType,created:new Date().toISOString()});state.cart=[];state.discount=0;persistRuntime();toast('Transaksi dipending.');render()
 }
 function payModal(){
  const sub=state.cart.reduce((a,x)=>a+x.price*x.qty,0),disc=state.discountType==='%'?sub*(Number(state.discount)||0)/100:Number(state.discount)||0,after=Math.max(0,sub-disc),tax=Number(db.settings.tax)||0,total=after+(tax?after*tax/100:0);
@@ -1019,7 +839,6 @@ function cashFields(){
  document.getElementById('otherField').classList.toggle('hidden',m!=='Lainnya');
 }
 function completePayment(total){
- if(terminalLeaseLost)return toast('Terminal ini sudah diambil alih perangkat lain. Pembayaran diblokir untuk mencegah transaksi ganda.');
  const session=getSession(state.sessionId);
  if(!session||session.closed)return toast('Shift sudah closing. Silakan masuk dengan shift yang aktif.');
  const customer=document.getElementById('customer').value.trim(), selectedMethod=document.getElementById('method').value;
@@ -1040,7 +859,7 @@ function completePayment(total){
    if(!method){if(confirmBtn)confirmBtn.dataset.busy='0';return toast('Nama pembayaran lainnya wajib diisi.');}
  }
 
- const id='TRX-'+currentTerminalId+'-'+dateKey().replaceAll('-','')+'-'+(crypto.randomUUID?crypto.randomUUID():Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,8)).toUpperCase(),sale={id,terminalId:currentTerminalId,deviceId,date:new Date().toISOString(),businessDate:session.businessDate,sessionId:session.id,cashier:state.cashier,shift:state.shift,customer,items:state.cart.map(x=>({id:x.id,name:x.name,price:x.price,qty:x.qty})),discount:Number(state.discount)||0,discountType:state.discountType,tax:Number(db.settings.tax)||0,total,method,cash,change:method==='Cash'?cash-total:0,voided:false};
+ const id='TRX-'+String(++db.lastNo).padStart(5,'0'),sale={id,date:new Date().toISOString(),businessDate:session.businessDate,sessionId:session.id,cashier:state.cashier,shift:state.shift,customer,items:state.cart.map(x=>({id:x.id,name:x.name,price:x.price,qty:x.qty})),discount:Number(state.discount)||0,discountType:state.discountType,tax:Number(db.settings.tax)||0,total,method,cash,change:method==='Cash'?cash-total:0,voided:false};
  db.sales.push(sale);
  db.lastSession={date:dateKey(),shift:state.shift,closed:false,sessionId:session.id};
  state.cart=[];state.discount=0;persistRuntime();
@@ -1049,36 +868,16 @@ function completePayment(total){
  if(selectedMethod==='QRIS')showPaymentNotice('Pembayaran QRIS',`Pastikan pembayaran sesuai nominal ${rupiah(total)}.`,'info');
  printReceipt(sale,false);
 }
-function uniqueRecordsBy(list,key){
- const map=new Map();
- (Array.isArray(list)?list:[]).forEach(item=>{
-   if(!item)return;
-   const raw=item[key]??(key==='saleId'?item.id:undefined);
-   if(raw===undefined||raw===null||raw==='')return;
-   const id=String(raw);
-   if(!map.has(id)){map.set(id,item);return;}
-   // Merge duplicates by ID, keeping populated details and avoiding double counts.
-   const old=map.get(id), merged={...old,...item};
-   if((!item.items||!item.items.length)&&old.items)merged.items=old.items;
-   map.set(id,merged);
- });
- return [...map.values()];
-}
-function reportSales(){return uniqueRecordsBy(terminalRecords(db.sales),'id');}
-function reportVoids(){return uniqueRecordsBy(terminalRecords(db.voids),'saleId');}
-async function openReport(viewOnly=false){
+function openReport(viewOnly=false){
  state.screen='laporan';
  state.reportGuest=!!viewOnly || !state.cashier;
- // Refresh from Google Sheets before showing reports. If offline, show local data without losing it.
- const loaded=await pullCloud(false);
  render();
- if(viewOnly)document.getElementById('login').classList.add('hidden');
- if(!loaded&&!navigator.onLine)toast('Offline: laporan memakai data lokal yang tersimpan.');
- else if(!loaded&&apiUrl())toast('Google Sheets belum bisa dimuat. Laporan sementara memakai data lokal.');
+ if(viewOnly){
+   document.getElementById('login').classList.add('hidden');
+ }
 }
 
 function closeShift(){
- if(terminalLeaseLost)return toast('Terminal ini sudah diambil alih perangkat lain. Closing shift diblokir.');
  const session=getSession(state.sessionId);
  if(!session){toast('Sesi shift tidak ditemukan.');return;}
  if(session.closed){toast('Shift ini sudah closing.');return;}
@@ -1086,7 +885,7 @@ function closeShift(){
  session.closed=true;
  session.closedAt=new Date().toISOString();
  db.lastSession={date:dateKey(),shift:session.shift,closed:true,sessionId:session.id};
- db.runtime={terminalId:currentTerminalId,deviceId,cashier:'',shift:'',sessionId:null,cart:[],category:'Semua',discountType:'Rp',discount:0};
+ db.runtime={cashier:'',shift:'',sessionId:null,cart:[],category:'Semua',discountType:'Rp',discount:0};
  save();
  state.cashier='';
  state.shift='';
@@ -1100,13 +899,13 @@ function closeShift(){
 }
 
   function reportHTML(){
-  const today=dateKey(), sales=reportSales().filter(s=>s.businessDate===today), voids=reportVoids().filter(v=>v.businessDate===today);
+  const today=dateKey(), sales=db.sales.filter(s=>s.businessDate===today), voids=db.voids.filter(v=>v.businessDate===today);
   const active=getSession(state.sessionId);
   const isGuest=!!state.reportGuest;
   return `<section class="panel report-shell">
     <div class="report-window">
       <div class="report-titlebar">
-        <div><b>📊 Laporan Penjualan</b><div class="mini">${isGuest?'Mode lihat laporan':'Kasir aktif • Shift '+esc(state.shift||'')} • ${esc(currentTerminalId)}</div></div>
+        <div><b>📊 Laporan Penjualan</b><div class="mini">${isGuest?'Mode lihat laporan':'Kasir aktif • Shift '+esc(state.shift||'')}</div></div>
         <button class="close" onclick="closeReport()">×</button>
       </div>
       <div class="toolbar report-toolbar">
@@ -1163,7 +962,7 @@ function switchReportTab(tab){
  bs?.classList.toggle('active',isSales); bv?.classList.toggle('active',!isSales);
 }
 function showVoidDetail(saleId){
- const v=db.voids.find(x=>x.saleId===saleId&&belongsToCurrentTerminal(x)), s=db.sales.find(x=>x.id===saleId&&belongsToCurrentTerminal(x)); if(!v||!s)return;
+ const v=db.voids.find(x=>x.saleId===saleId), s=db.sales.find(x=>x.id===saleId); if(!v||!s)return;
  const items=s.items.map(x=>`<tr><td>${esc(x.name)}</td><td>${rupiah(x.price)}</td><td>${x.qty}</td><td>${rupiah(x.price*x.qty)}</td></tr>`).join('');
  const sub=s.items.reduce((a,x)=>a+x.price*x.qty,0), disc=s.discountType==='%'?sub*s.discount/100:s.discount, after=Math.max(0,sub-disc), ppn=s.tax?after*s.tax/100:0;
  modal(`<div class="modalhead"><div><h3 style="margin:0">Detail Void ${esc(s.id)}</h3><div class="mini">${new Date(v.date).toLocaleString('id-ID')} • ${esc(s.cashier)} • Shift ${s.shift}</div></div><button class="close" onclick="closeModal()">×</button></div>
@@ -1172,29 +971,25 @@ function showVoidDetail(saleId){
  <div class="sumline"><span>Subtotal</span><span>${rupiah(sub)}</span></div>${disc?`<div class="sumline"><span>Diskon</span><span>-${rupiah(disc)}</span></div>`:''}${s.tax?`<div class="sumline"><span>PPN ${s.tax}%</span><span>${rupiah(ppn)}</span></div>`:''}<div class="sumline" style="font-size:14px"><b>Total Void</b><b>${rupiah(s.total)}</b></div>
  <div style="display:flex;justify-content:flex-end;margin-top:12px"><button class="btn light" onclick="closeModal()">Tutup</button></div>`);
 }
-async function refreshReport(){
+function refreshReport(){
  const f=document.getElementById('rFrom').value,t=document.getElementById('rTo').value,sh=document.getElementById('rShift').value;
- if(!f||!t||f>t)return toast('Periksa tanggal laporan.');
- const loaded=await pullCloud(false);
- const sales=reportSales().filter(s=>s.businessDate>=f&&s.businessDate<=t&&(!sh||String(s.shift)===sh));
- const voids=reportVoids().filter(v=>v.businessDate>=f&&v.businessDate<=t&&(!sh||String(v.shift)===sh));
+ const sales=db.sales.filter(s=>s.businessDate>=f&&s.businessDate<=t&&(!sh||s.shift===sh));
+ const voids=db.voids.filter(v=>v.businessDate>=f&&v.businessDate<=t&&(!sh||v.shift===sh));
  document.getElementById('reportBody').innerHTML=reportBody(sales,voids);
- if(!loaded&&apiUrl())toast('Server belum merespons; laporan memakai gabungan data lokal yang sudah tersimpan.');
 }
 function filterTickets(){const q=document.getElementById('ticketSearch').value.toLowerCase();document.querySelectorAll('#ticketTable tbody tr').forEach(r=>r.style.display=r.textContent.toLowerCase().includes(q)?'':'none')}
 function voidSale(id){
- if(terminalLeaseLost)return toast('Terminal ini sudah diambil alih perangkat lain. Void diblokir.');
- const s=db.sales.find(x=>x.id===id&&belongsToCurrentTerminal(x));if(!s)return;
+ const s=db.sales.find(x=>x.id===id);if(!s)return;
  const session=getSession(s.sessionId);
  if(!session||session.closed)return alert('Transaksi tidak bisa di-void karena shift sudah closing.');
  if(!state.sessionId||s.sessionId!==state.sessionId)return alert('Void hanya dapat dilakukan pada transaksi di shift aktif kasir ini.');
  if(s.businessDate!==session.businessDate)return alert('Transaksi bukan bagian dari tanggal operasional shift aktif.');
  const reason=prompt('Masukkan alasan void:');if(!reason?.trim())return toast('Alasan void wajib diisi.');
  s.voided=true;
- db.voids.push({saleId:s.id,terminalId:currentTerminalId,deviceId,date:new Date().toISOString(),businessDate:s.businessDate,sessionId:s.sessionId,cashier:state.cashier,shift:state.shift,reason:reason.trim(),total:s.total});
+ db.voids.push({saleId:s.id,date:new Date().toISOString(),businessDate:s.businessDate,sessionId:s.sessionId,cashier:state.cashier,shift:state.shift,reason:reason.trim(),total:s.total});
  save();render();printReceipt(s,true)
 }
-function printById(id,voided){const s=db.sales.find(x=>x.id===id&&belongsToCurrentTerminal(x));if(s)printReceipt(s,voided,true)}
+function printById(id,voided){const s=db.sales.find(x=>x.id===id);if(s)printReceipt(s,voided,true)}
 
 // -------------------------------------------------------------
 // HYBRID PRINTING ENGINE (DIRECT WEB BT & RAWBT FALLBACK)
@@ -1249,13 +1044,29 @@ function generateReceiptText(s, isVoid=false, reprint=false) {
 }
 
 function printViaRawBTText(plainText) {
-  const ESC='\x1B';
-  const initPrinter=ESC+'@';
-  const fullData=initPrinter+plainText;
-  const base64Data=btoa(unescape(encodeURIComponent(fullData)));
-  const intentUrl='intent:-base64,'+base64Data+'#Intent;scheme=rawbt;package=ru.a404m.rawbtprinter;end;';
-  try{ window.location.href=intentUrl; }
-  catch(e){ toast('RawBT tidak dapat dibuka.'); }
+  const ESC = '\x1B';
+  const initPrinter = ESC + '@';
+  const fullData = initPrinter + plainText;
+  
+  // Konversi teks laporan ke format Base64 yang aman untuk Android
+  const base64Data = btoa(unescape(encodeURIComponent(fullData)));
+  
+  // PERBAIKAN FATAL: Format URL Intent Android yang benar agar langsung masuk ke aplikasi RawBT
+  const intentUrl = 'intent:#Intent;' +
+    'action=ru.a404m.rawbtprinter.action.PRINT;' +
+    'category=android.intent.category.DEFAULT;' +
+    'type=text/plain;' +
+    'S.base64=' + base64Data + ';' +
+    'package=ru.a404m.rawbtprinter;' +
+    'end;';
+  
+  try { 
+    // Paksa tablet Android membuka aplikasi RawBT dan langsung ngeprint
+    window.location.href = intentUrl; 
+    toast('Mengirim laporan ke aplikasi RawBT...');
+  } catch(e) { 
+    toast('Aplikasi RawBT tidak dapat dibuka di tablet ini.'); 
+  }
 }
 
 function receiptHTML(s,isVoid=false,reprint=false){
@@ -1415,6 +1226,49 @@ async function writeBluetoothReceipt(plainText){
   return true;
 }
 
+
+async function writeBluetoothReportOnly(plainText) {
+  if (btState !== 'connected' || !printCharacteristic) {
+    throw new Error('Printer Bluetooth belum terhubung.');
+  }
+
+  const data = new TextEncoder().encode('\x1B@' + plainText);
+
+  const canWriteWithoutResponse =
+    !!printCharacteristic.properties?.writeWithoutResponse &&
+    typeof printCharacteristic.writeValueWithoutResponse === 'function';
+
+  const canWrite =
+    !!printCharacteristic.properties?.write &&
+    typeof printCharacteristic.writeValue === 'function';
+
+  if (!canWriteWithoutResponse && !canWrite) {
+    throw new Error('Printer tidak mendukung pengiriman data.');
+  }
+
+  const chunkSize = 180;
+
+  for (let i = 0; i < data.length; i += chunkSize) {
+    if (btState !== 'connected' || !printCharacteristic) {
+      throw new Error('Koneksi printer terputus.');
+    }
+
+    const chunk = data.slice(i, i + chunkSize);
+
+    if (canWriteWithoutResponse) {
+      await printCharacteristic.writeValueWithoutResponse(chunk);
+
+      if (i + chunkSize < data.length) {
+        await new Promise(resolve => setTimeout(resolve, 15));
+      }
+    } else {
+      await printCharacteristic.writeValue(chunk);
+    }
+  }
+
+  return true;
+}
+
 async function printReceipt(s,isVoid=false,reprint=false){
   const plainText=generateReceiptText(s,isVoid,reprint);
   // Direct print only when a real Web Bluetooth GATT connection is active.
@@ -1531,46 +1385,18 @@ function setBTState(s){
 }
 
 function openSettings(){state.screen='pengaturan';render()}
-function settingsHTML(){return `<section class="panel settings-shell"><div class="settings-window"><div class="report-titlebar"><div><b>⚙️ Pengaturan</b><div class="mini">Konfigurasi tempat, menu, QRIS, dan backup</div></div><button class="close" onclick="closeSettings()">×</button></div><div style="padding:16px"><div class="settingmenu"><button class="settingtab active">Umum</button><button class="settingtab" onclick="menuManager()">Daftar Menu / Impor Excel</button><button class="settingtab" onclick="backupData()">Backup</button><button class="settingtab" onclick="restoreData()">Restore</button><button class="settingtab danger" onclick="wipe()">Hapus Semua Data</button></div><div class="grid2"><div class="field"><label>Nama Tempat</label><input id="setName" class="input" value="${esc(db.settings.name)}"></div><div class="field"><label>PPN (%)</label><input id="setTax" class="input" type="number" min="0" value="${db.settings.tax||''}"></div></div><div class="field"><label>Alamat</label><input id="setAddress" class="input" value="${esc(db.settings.address)}"></div><div class="grid2"><div class="field"><label>Logo Struk (otomatis backup ke Drive saat online)</label><input id="logoFile" type="file" accept="image/*" class="input"></div><div class="field"><label>QRIS (otomatis backup ke Drive saat online)</label><input id="qrisFile" type="file" accept="image/*" class="input"></div></div><button class="btn primary" onclick="saveSettings()">Simpan Pengaturan</button></div></section>`}
+function settingsHTML(){return `<section class="panel settings-shell"><div class="settings-window"><div class="report-titlebar"><div><b>⚙️ Pengaturan</b><div class="mini">Konfigurasi tempat, menu, QRIS, dan backup</div></div><button class="close" onclick="closeSettings()">×</button></div><div style="padding:16px"><div class="settingmenu"><button class="settingtab active">Umum</button><button class="settingtab" onclick="menuManager()">Daftar Menu</button><button class="settingtab" onclick="backupData()">Backup</button><button class="settingtab" onclick="restoreData()">Restore</button><button class="settingtab danger" onclick="wipe()">Hapus Semua Data</button></div><div class="grid2"><div class="field"><label>Nama Tempat</label><input id="setName" class="input" value="${esc(db.settings.name)}"></div><div class="field"><label>PPN (%)</label><input id="setTax" class="input" type="number" min="0" value="${db.settings.tax||''}"></div></div><div class="field"><label>Alamat</label><input id="setAddress" class="input" value="${esc(db.settings.address)}"></div><div class="grid2"><div class="field"><label>Logo Struk</label><input id="logoFile" type="file" accept="image/*" class="input"></div><div class="field"><label>QRIS</label><input id="qrisFile" type="file" accept="image/*" class="input"></div></div><button class="btn primary" onclick="saveSettings()">Simpan Pengaturan</button></div></section>`}
 function closeSettings(){state.screen='kasir';render()}
 function saveSettings(){const finish=(logo,qris)=>{db.settings.name=document.getElementById('setName').value.trim()||'Warkop';db.settings.address=document.getElementById('setAddress').value.trim();db.settings.tax=Number(document.getElementById('setTax').value)||0;if(logo)db.settings.logo=logo;if(qris)db.settings.qris=qris;save();toast('Pengaturan tersimpan.');render()};Promise.all([file64(document.getElementById('logoFile').files[0]),file64(document.getElementById('qrisFile').files[0])]).then(x=>finish(x[0],x[1]))}
 function file64(f){return new Promise(r=>{if(!f)return r('');const fr=new FileReader();fr.onload=()=>r(fr.result);fr.readAsDataURL(f)})}
-function menuManager(){modal(`<div class="modalhead"><h3>Daftar Menu</h3><button class="close" onclick="closeModal()">×</button></div><div class="notice">Tambah, edit, hapus, atau impor menu dari Excel (.xlsx/.xls) dengan kolom Kategori, Nama Menu, Harga. Foto menu disimpan lokal agar tetap tampil offline dan otomatis diunggah ke Google Drive saat sinkronisasi online.</div><div class="field"><label>Impor Excel Menu</label><input id="menuExcelFile" class="input" type="file" accept=".xlsx,.xls,.csv"><small class="mini">Kolom wajib: Kategori, Nama Menu, Harga. Menu dengan nama + kategori yang sama akan diperbarui, bukan diduplikasi.</small></div><button class="btn primary" onclick="importMenuExcel()">📥 Impor Excel ke Daftar Menu</button><div id="menuEditor" style="margin-top:12px">${menuEditorHTML()}</div>`)}
-function menuEditorHTML(){return `<div class="grid2"><div class="field"><label>Kategori</label><input id="mCat" class="input" placeholder="Kopi"></div><div class="field"><label>Nama Produk</label><input id="mName" class="input" placeholder="Nama menu"></div></div><div class="grid2"><div class="field"><label>Harga</label><input id="mPrice" class="input" type="number" placeholder="10000"></div><div class="field"><label>Foto Menu (backup Drive saat online)</label><input id="mFile" class="input" type="file" accept="image/*"></div></div><button class="btn primary" onclick="addProduct()">+ Tambahkan</button><div class="scroll" style="margin-top:15px"><table><thead><tr><th>Menu</th><th>Kategori</th><th>Harga</th><th>Aksi</th></tr></thead><tbody>${db.products.filter(p=>!p.deleted).map(p=>`<tr><td>${esc(p.name)}</td><td>${esc(p.cat)}</td><td>${rupiah(p.price)}</td><td><button class="btn light" onclick="editProduct('${p.id}')">Edit</button> <button class="btn danger" onclick="deleteProduct('${p.id}')">Hapus</button></td></tr>`).join('')}</tbody></table></div>`}
+function menuManager(){modal(`<div class="modalhead"><h3>Daftar Menu</h3><button class="close" onclick="closeModal()">×</button></div><div class="notice">Tambah, edit, atau hapus menu. Foto disimpan lokal di perangkat.</div><div id="menuEditor">${menuEditorHTML()}</div>`)}
+function menuEditorHTML(){return `<div class="grid2"><div class="field"><label>Kategori</label><input id="mCat" class="input" placeholder="Kopi"></div><div class="field"><label>Nama Produk</label><input id="mName" class="input" placeholder="Nama menu"></div></div><div class="grid2"><div class="field"><label>Harga</label><input id="mPrice" class="input" type="number" placeholder="10000"></div><div class="field"><label>Foto</label><input id="mFile" class="input" type="file" accept="image/*"></div></div><button class="btn primary" onclick="addProduct()">+ Tambahkan</button><div class="scroll" style="margin-top:15px"><table><thead><tr><th>Menu</th><th>Kategori</th><th>Harga</th><th>Aksi</th></tr></thead><tbody>${db.products.map(p=>`<tr><td>${esc(p.name)}</td><td>${esc(p.cat)}</td><td>${rupiah(p.price)}</td><td><button class="btn light" onclick="editProduct('${p.id}')">Edit</button> <button class="btn danger" onclick="deleteProduct('${p.id}')">Hapus</button></td></tr>`).join('')}</tbody></table></div>`}
 function addProduct(){const cat=document.getElementById('mCat').value.trim(),name=document.getElementById('mName').value.trim(),price=Number(document.getElementById('mPrice').value);if(!cat||!name||!price)return toast('Kategori, nama, dan harga wajib diisi.');file64(document.getElementById('mFile').files[0]).then(img=>{db.products.push({id:'p'+Date.now(),cat,name,price,icon:iconFor(cat),img});save();menuManager();render()})}
 function editProduct(id){const p=db.products.find(x=>x.id===id);const n=prompt('Nama produk:',p.name);if(n===null)return;const h=prompt('Harga:',p.price);if(h===null)return;const c=prompt('Kategori:',p.cat);if(c===null)return;p.name=n.trim()||p.name;p.price=Number(h)||p.price;p.cat=c.trim()||p.cat;p.icon=iconFor(p.cat);save();menuManager();render()}
-function deleteProduct(id){if(confirm('Hapus menu ini?')){const p=db.products.find(x=>x.id===id);if(p)p.deleted=true;save();menuManager();render()}}
-
-// URL Google Sheets ditanam langsung di kode agar kasir tidak perlu mengatur URL manual.
-
-async function importMenuExcel(){
- const input=document.getElementById('menuExcelFile'),file=input?.files?.[0];
- if(!file)return toast('Pilih file Excel terlebih dahulu.');
- if(!window.XLSX)return toast('Library Excel belum termuat. Periksa internet lalu muat ulang aplikasi.');
- try{
-  const bytes=await file.arrayBuffer(),wb=XLSX.read(bytes,{type:'array'}),ws=wb.Sheets[wb.SheetNames[0]],rows=XLSX.utils.sheet_to_json(ws,{defval:''});
-  if(!rows.length)throw new Error('File tidak berisi data menu.');
-  const norm=v=>String(v??'').trim().toLowerCase().replace(/[\s_\-]+/g,'');
-  const keys=Object.keys(rows[0]),findKey=names=>keys.find(k=>names.includes(norm(k)));
-  const catKey=findKey(['kategori','category','cat']),nameKey=findKey(['namamenu','namaproduk','menu','produk','name']),priceKey=findKey(['harga','price']);
-  if(!catKey||!nameKey||!priceKey)throw new Error('Kolom wajib: Kategori, Nama Menu, Harga.');
-  let added=0,updated=0,skipped=0;
-  rows.forEach(row=>{
-   const cat=String(row[catKey]??'').trim(),name=String(row[nameKey]??'').trim();
-   const raw=String(row[priceKey]??'').trim().replace(/[Rp\s.]/gi,'').replace(/,/g,'');
-   const price=Number(raw);
-   if(!cat||!name||!Number.isFinite(price)||price<=0){skipped++;return}
-   const old=db.products.find(p=>String(p.cat).toLowerCase()===cat.toLowerCase()&&String(p.name).toLowerCase()===name.toLowerCase());
-   if(old){old.price=price;old.icon=iconFor(cat);old.deleted=false;updated++}
-   else{db.products.push({id:'p'+Date.now().toString(36)+Math.random().toString(36).slice(2,7),cat,name,price,icon:iconFor(cat),img:''});added++}
-  });
-  save();menuManager();render();toast(`Impor selesai: ${added} baru, ${updated} diperbarui, ${skipped} dilewati.`);
- }catch(e){alert('Gagal impor Excel: '+e.message)}
-}
-
+function deleteProduct(id){if(confirm('Hapus menu ini?')){db.products=db.products.filter(p=>p.id!==id);save();menuManager();render()}}
 function backupData(){const blob=new Blob([JSON.stringify(db,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='backup-warkop-'+dateKey()+'.json';a.click();toast('Backup dibuat.')}
 function restoreData(){const i=document.createElement('input');i.type='file';i.accept='.json,application/json';i.onchange=()=>{const f=i.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const x=JSON.parse(r.result);if(!x.settings||!x.products)throw 0;db=x;save();toast('Restore berhasil.');render()}catch(e){toast('File backup tidak valid.')}};r.readAsText(f)};i.click()}
-function wipe(){if(confirm('Hapus data lokal pada perangkat ini? Data Google Sheets tidak ikut dihapus dan dapat dimuat kembali.')){localStorage.removeItem(KEY);db=structuredClone(defaults);saveLocalMirror(db);state.cart=[];pullCloud(false).finally(()=>{render();toast('Data lokal direset; mencoba memuat data dari Google Sheets.')})}}
+function wipe(){if(confirm('Hapus SEMUA data termasuk transaksi dan menu?')){localStorage.removeItem(KEY);db=load();state.cart=[];toast('Semua data dihapus.');render()}}
 function modal(html){const m=document.getElementById('modal');m.innerHTML=`<div class="modalbox">${html}</div>`;m.classList.remove('hidden')}
 function closeModal(){document.getElementById('modal').classList.add('hidden')}
 function generateOwnerDailyReportText(f,t,sh,sales){
@@ -1712,41 +1538,44 @@ function ownerDailyReportHTML(f,t,sh,sales){
   </div>`;
 }
 
-function openOwnerDailyReportPreview(f,t,sh,sales){
-  const old=document.getElementById('receiptPreviewBackdrop');
-  if(old)old.remove();
+function openOwnerDailyReportPreview(f, t, sh, sales){
+  const old = document.getElementById('receiptPreviewBackdrop');
+  if(old) old.remove();
 
-  const wrap=document.createElement('div');
-  wrap.id='receiptPreviewBackdrop';
-  wrap.className='modal receipt-preview-modal';
+  const wrap = document.createElement('div');
+  wrap.id = 'receiptPreviewBackdrop';
+  wrap.className = 'modal receipt-preview-modal';
 
-  const box=document.createElement('div');
-  box.className='receipt-preview';
+  const box = document.createElement('div');
+  box.className = 'receipt-preview';
 
-  const head=document.createElement('div');
-  head.className='modalhead receipt-no-print';
-  head.innerHTML=`
+  const head = document.createElement('div');
+  head.className = 'modalhead receipt-no-print';
+  head.innerHTML = `
     <div>
       <b>Preview Laporan</b>
     </div>
     <button class="close" onclick="closeReceiptPreview()">×</button>`;
 
-  const area=document.createElement('div');
-  area.className='receipt-print-area';
+  const area = document.createElement('div');
+  area.className = 'receipt-print-area';
 
-  const paper=document.createElement('div');
-  paper.className='receipt-print-paper';
-  paper.dataset.ownerReport='1';
-  paper.dataset.ownerFrom=f;
-  paper.dataset.ownerTo=t;
-  paper.dataset.ownerShift=sh||'';
-  paper.dataset.plainText=generateOwnerDailyReportText(f,t,sh,sales);
-  paper.innerHTML=ownerDailyReportHTML(f,t,sh,sales);
+  const paper = document.createElement('div');
+  paper.className = 'receipt-print-paper';
+  paper.dataset.ownerReport = '1';
+  paper.dataset.ownerFrom = f;
+  paper.dataset.ownerTo = t;
+  paper.dataset.ownerShift = sh || '';
+  
+  const plainText = generateOwnerDailyReportText(f, t, sh, sales);
+  paper.dataset.plainText = plainText;
+
+  paper.innerHTML = ownerDailyReportHTML(f, t, sh, sales);
   area.appendChild(paper);
 
-  const actions=document.createElement('div');
-  actions.className='receipt-actions receipt-no-print';
-  actions.innerHTML=`
+  const actions = document.createElement('div');
+  actions.className = 'receipt-actions receipt-no-print';
+  actions.innerHTML = `
     <button class="btn light" onclick="closeReceiptPreview()">Tutup</button>
     <button class="btn primary" onclick="printOwnerReportPreview()">Print</button>`;
 
@@ -1757,86 +1586,161 @@ function openOwnerDailyReportPreview(f,t,sh,sales){
   document.body.appendChild(wrap);
 }
 
-async function printOwnerReportPreview(){
-  const preview=document.querySelector('#receiptPreviewBackdrop .receipt-print-paper[data-owner-report="1"]');
-  if(!preview)return;
 
-  const plainText=preview.dataset.plainText||'';
+async function printOwnerReportPreview() {
+  const preview = document.querySelector(
+    '#receiptPreviewBackdrop .receipt-print-paper[data-owner-report="1"]'
+  );
 
-  // Jika Bluetooth terhubung, cetak langsung via Bluetooth
-  if(btState==='connected'&&printCharacteristic){
-    try{
-      await writeBluetoothReceipt(plainText);
-      toast('Laporan Owner berhasil dicetak langsung via Bluetooth.');
+  if (!preview) {
+    toast('Preview laporan tidak ditemukan.');
+    return;
+  }
+
+  const plainText = preview.dataset.plainText || '';
+
+  if (!plainText.trim()) {
+    toast('Isi laporan kosong.');
+    return;
+  }
+
+  // 1. Bluetooth Direct: khusus laporan.
+  if (btState === 'connected' && printCharacteristic) {
+    try {
+      toast('Mengirim laporan ke printer...');
+
+      const success = await writeBluetoothReportOnly(plainText);
+
+      if (!success) {
+        throw new Error('Pengiriman laporan gagal.');
+      }
+
+      await writeBluetoothReportOnly('\n\n\n\n');
+
+      toast('Laporan berhasil dikirim ke printer Bluetooth.');
       closeReceiptPreview();
       return;
-    }catch(e){
-      console.error('Direct Web Bluetooth laporan owner failed:',e);
-      resetBTState();
+
+    } catch (e) {
+      console.error('Gagal mencetak laporan:', e);
+      toast('Cetak langsung gagal. Coba tombol Print lagi atau periksa koneksi.');
+      return;
     }
   }
 
-  // Jika tidak terhubung, gunakan RawBT untuk Android atau print biasa
-  if(navigator.userAgent.includes('Android')){
-    printViaRawBTText(plainText);
+  // 2. Android: gunakan RawBT jika Bluetooth Direct tidak aktif.
+  if (/Android/i.test(navigator.userAgent)) {
+    try {
+      printViaRawBTText(plainText);
+      toast('Perintah cetak laporan dikirim ke RawBT.');
+      closeReceiptPreview();
+    } catch (e) {
+      console.error('Gagal membuka RawBT:', e);
+      toast('RawBT gagal dibuka. Periksa instalasi RawBT.');
+    }
     return;
   }
-  
+
+  // 3. Browser komputer.
   window.print();
 }
 
-async function printOwnerDailyReport(){
-  const loaded=await pullCloud(false);
-  const f=document.getElementById('rFrom')?.value||dateKey();
-  const t=document.getElementById('rTo')?.value||f;
-  const sh=document.getElementById('rShift')?.value||'';
 
-  if(!f||!t)return toast('Tanggal laporan belum dipilih.');
-  if(f>t)return toast('Tanggal mulai tidak boleh lebih besar dari tanggal akhir.');
 
-  const sales=reportSales().filter(s=>
-    s.businessDate>=f&&s.businessDate<=t&&(!sh||String(s.shift)===sh)&&!s.voided
+async function printOwnerDailyReport() {
+  const f = document.getElementById('rFrom')?.value || dateKey();
+  const t = document.getElementById('rTo')?.value || f;
+  const sh = document.getElementById('rShift')?.value || '';
+
+  if (!f || !t) {
+    return toast('Tanggal laporan belum dipilih.');
+  }
+
+  if (f > t) {
+    return toast('Tanggal mulai tidak boleh lebih besar dari tanggal akhir.');
+  }
+
+  // Filter transaksi berdasarkan tanggal, shift, dan status void.
+  const sales = db.sales.filter(s => {
+    if (!s.businessDate) return false;
+
+    const tglMurniData = String(s.businessDate).substring(0, 10);
+    const matchDate = tglMurniData >= f && tglMurniData <= t;
+    const matchShift = !sh || String(s.shift) === String(sh);
+    const notVoided = !s.voided;
+
+    return matchDate && matchShift && notVoided;
+  });
+
+  if (sales.length === 0) {
+    return toast('Tidak ada transaksi untuk tanggal/shift ini.');
+  }
+
+  // Buat teks laporan tanpa menghapus karakter dari hasil aslinya.
+  const plainText = String(
+    generateOwnerDailyReportText(f, t, sh, sales)
   );
 
-  const plainText=generateOwnerDailyReportText(f,t,sh,sales);
+  // Jika Bluetooth Direct terhubung, gunakan fungsi khusus laporan.
+  if (btState === 'connected' && printCharacteristic) {
+    try {
+      toast('Sedang mengirim laporan ke printer...');
 
-  // Jika Bluetooth terhubung, cetak langsung tanpa lewat preview/RawBT
-  if(btState==='connected'&&printCharacteristic){
-    try{
-      await writeBluetoothReceipt(plainText);
-      toast('Laporan Owner berhasil dicetak langsung via Bluetooth.');
+      const success = await writeBluetoothReportOnly(plainText);
+
+      if (!success) {
+        throw new Error('Pengiriman laporan gagal.');
+      }
+
+      // Majukan kertas setelah seluruh teks laporan dikirim.
+      const paperFeedSuccess =
+        await writeBluetoothReportOnly('\n\n\n\n');
+
+      if (!paperFeedSuccess) {
+        throw new Error('Perintah maju kertas gagal dikirim.');
+      }
+
+      toast('Laporan berhasil dikirim ke printer Bluetooth.');
       return;
-    }catch(e){
-      console.error('Direct Web Bluetooth laporan owner failed:',e);
-      resetBTState();
+
+    } catch (e) {
+      // Pertahankan koneksi agar tidak langsung memutus Bluetooth
+      // hanya karena satu operasi cetak gagal.
+      console.error('Gagal mengirim laporan Bluetooth:', e);
+
+      toast(
+        'Laporan gagal dikirim. Periksa printer dan koneksi Bluetooth.'
+      );
+
+      return;
     }
   }
 
-  // Jika belum terhubung, buka preview terlebih dahulu seperti struk
-  openOwnerDailyReportPreview(f,t,sh,sales);
+  // Preview hanya dibuka jika Bluetooth Direct belum terhubung.
+  openOwnerDailyReportPreview(f, t, sh, sales);
 }
 
 
-async function exportExcel(){
- const loaded=await pullCloud(false);
+
+function exportExcel(){
  const f=document.getElementById('rFrom').value,t=document.getElementById('rTo').value,sh=document.getElementById('rShift').value;
 
  if(sh){
    const active=getActiveSession(sh, sh==='3' ? ((new Date(t+'T12:00:00')).getTime() ? dateKey(new Date(t+'T12:00:00')) : t) : t);
-   const activeSessions=terminalRecords(db.shiftSessions).filter(s=>s.shift===String(sh)&&s.businessDate>=f&&s.businessDate<=t&&!s.closed);
+   const activeSessions=(db.shiftSessions||[]).filter(s=>s.shift===String(sh)&&s.businessDate>=f&&s.businessDate<=t&&!s.closed);
    if(activeSessions.length){
      return alert(`Laporan Excel Shift ${sh} belum bisa ditarik karena shift masih aktif. Lakukan Closing Shift terlebih dahulu.`);
    }
  }else{
-   const activeSessions=terminalRecords(db.shiftSessions).filter(s=>s.businessDate>=f&&s.businessDate<=t&&!s.closed);
+   const activeSessions=(db.shiftSessions||[]).filter(s=>s.businessDate>=f&&s.businessDate<=t&&!s.closed);
    if(activeSessions.length){
      return alert('Laporan Excel belum bisa ditarik karena masih ada shift aktif pada rentang tanggal tersebut. Lakukan Closing Shift terlebih dahulu.');
    }
  }
 
- const allSales=reportSales().filter(s=>s.businessDate>=f&&s.businessDate<=t&&(!sh||String(s.shift)===sh));
+ const allSales=db.sales.filter(s=>s.businessDate>=f&&s.businessDate<=t&&(!sh||s.shift===sh));
  const sales=allSales.filter(s=>!s.voided);
- const voids=reportVoids().filter(v=>v.businessDate>=f&&v.businessDate<=t&&(!sh||String(v.shift)===sh));
+ const voids=db.voids.filter(v=>v.businessDate>=f&&v.businessDate<=t&&(!sh||v.shift===sh));
 
  const rekap=[['No Struk','Tanggal/Waktu','Kasir','Shift','Meja/Nama','Total Subtotal','Diskon Struk','PPN','Total Akhir','Metode']];
  sales.forEach(s=>{
@@ -1854,7 +1758,7 @@ async function exportExcel(){
 
  const audit=[['LAPORAN AUDIT TRANSAKSI VOID (BATAL)'],[new Date(f+'T00:00:00').toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'})+(f!==t?' - '+new Date(t+'T00:00:00').toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'}):'')],[db.settings.name||'WARKOP'],[],['Waktu / Tanggal','No Struk','Kasir / Shift','Detail Barang','Nominal Batal','Alasan Void']];
  voids.forEach(v=>{
-   const s=db.sales.find(x=>x.id===v.saleId&&belongsToCurrentTerminal(x));
+   const s=db.sales.find(x=>x.id===v.saleId);
    const detailBarang=s?s.items.map(x=>`${x.name} x${x.qty}`).join(', '):'-';
    audit.push([new Date(v.date).toLocaleString('id-ID'),v.saleId,`${v.cashier} (Shift ${v.shift})`,detailBarang,v.total,v.reason]);
  });
@@ -1862,7 +1766,7 @@ async function exportExcel(){
 
  const blob=xlsxBlob([{name:'Rekap Struk',rows:rekap},{name:'Detail Barang Terjual',rows:detail},{name:'Audit Log Void',rows:audit}]);
  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`Laporan_Penjualan_${f}_sd_${t}${sh?'_Shift_'+sh:''}.xlsx`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
- toast('Laporan Excel 3 sheet berhasil dibuat. ID struk dideduplikasi; VOID tidak masuk Rekap/Detail.'+(loaded?' Data server berhasil diperbarui.':' Server tidak tersedia, memakai data lokal.'));
+ toast('Laporan Excel 3 sheet berhasil dibuat. Transaksi VOID tidak dimasukkan ke Rekap/Detail.');
 }
 
 function xmlEsc(v){
@@ -1943,7 +1847,6 @@ function start(){
  }
 }
 start();
-restoreLocalMirror().finally(async()=>{if(apiUrl()){const loaded=await pullCloud(false);if(loaded)await syncCloud(false)}updateSyncIndicator()});
 </script>
 
 <script>
