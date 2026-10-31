@@ -13,7 +13,16 @@ button,input,select{font:inherit}button{cursor:pointer;border:0}.hidden{display:
 .app{height:100dvh;display:flex;flex-direction:column}.topbar{height:64px;flex:none;background:linear-gradient(90deg,var(--navy),#164d78);color:white;display:flex;align-items:center;justify-content:space-between;padding:0 18px;gap:12px}.brand{font-size:18px;font-weight:800;white-space:nowrap}.status{display:flex;gap:14px;align-items:center;font-size:13px}.pill{background:#ffffff1c;border:1px solid #ffffff33;padding:7px 10px;border-radius:10px}
 .main{min-height:0;flex:1;display:grid;grid-template-columns:minmax(0,1.65fr) minmax(310px,.85fr);gap:12px;padding:12px}.panel{background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);min-height:0}.menu-panel{display:flex;flex-direction:column;overflow:hidden}.toolbar{padding:12px;border-bottom:1px solid var(--line);display:flex;gap:8px;align-items:center;flex-wrap:wrap}.search{flex:1;min-width:170px}.input,.select{border:1px solid #cbd9e5;border-radius:10px;padding:10px 12px;background:white;outline:none;width:100%}.input:focus{border-color:var(--blue);box-shadow:0 0 0 3px #35a9e820}.cats{display:flex;gap:7px;overflow:auto;padding:8px 12px 10px}.cat{padding:8px 11px;border-radius:999px;background:#eef5fa;color:#31506a;white-space:nowrap}.cat.active{background:var(--navy);color:#fff}.products{padding:12px;overflow:auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:10px}.product{border:1px solid var(--line);border-radius:13px;overflow:hidden;background:#fff;text-align:left;transition:.15s}.product:hover{transform:translateY(-1px);box-shadow:var(--shadow)}.pic{height:92px;background:linear-gradient(135deg,#e7f5fd,#cfe9f7);display:flex;align-items:center;justify-content:center;font-size:42px;overflow:hidden}.pic img{width:100%;height:100%;object-fit:cover}.pinfo{padding:9px}.pname{font-weight:750;font-size:13px;line-height:1.25}.price{color:var(--navy);font-weight:800;margin-top:5px;font-size:13px}
 .cart{display:flex;flex-direction:column;overflow:hidden}.carthead{padding:13px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}.cartitems{flex:1;overflow:auto;padding:10px}.cartrow{border-bottom:1px solid #edf2f6;padding:9px 0}.rowtop{display:flex;justify-content:space-between;gap:8px}.qty{display:flex;align-items:center;gap:6px;margin-top:7px}.qty button{width:28px;height:28px;border-radius:8px;background:#eaf4fa;color:var(--navy);font-weight:800}.mini{font-size:12px;color:var(--muted)}.summary{padding:12px;border-top:1px solid var(--line);background:#fbfdff}.sumline{display:flex;justify-content:space-between;margin:6px 0}.total{font-size:16px;font-weight:900;color:var(--navy)}.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.btn{padding:9px 11px;font-size:13px;border-radius:10px;font-weight:750}.primary{background:var(--blue);color:white}.navy{background:var(--navy);color:white}.light{background:#eaf4fa;color:var(--navy)}.danger{background:#fee2e2;color:#991b1b}.footer-nav{height:72px;flex:none;background:#fff;border-top:1px solid var(--line);display:flex;justify-content:center;gap:8px;padding:9px}.navbtn{min-width:120px;font-size:13px;border-radius:11px;background:#eef5fa;color:var(--navy);font-weight:750}.navbtn.active{background:var(--navy);color:#fff}
-.modal{position:fixed;inset:0;background:#06182799;display:flex;align-items:center;justify-content:center;padding:15px;z-index:20}.modalbox{width:min(680px,100%);max-height:92dvh;overflow:auto;background:#fff;border-radius:17px;padding:18px;box-shadow:0 20px 70px #0004}.modalhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}.close{background:#eef2f6;border-radius:99px;width:34px;height:34px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.field{margin-bottom:10px}.field label{display:block;font-size:12px;font-weight:750;margin-bottom:5px}.login{position:fixed;inset:0;background:linear-gradient(145deg,var(--navy),#1c78a9);display:flex;align-items:center;justify-content:center;padding:20px;z-index:50}.loginbox{width:min(430px,100%);background:#fff;border-radius:20px;padding:22px;box-shadow:0 25px 80px #0005}.loginlogo{text-align:center;font-size:44px}.toast{position:fixed;right:15px;bottom:88px;background:var(--navy);color:#fff;padding:12px 15px;border-radius:11px;z-index:80;box-shadow:var(--shadow)}table{width:100%;border-collapse:collapse;font-size:12px}th,td{padding:8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}.scroll{overflow:auto}.empty{text-align:center;color:var(--muted);padding:35px 10px}.settingmenu{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px}.settingtab{padding:9px 12px;background:#edf5fa;border-radius:9px}.settingtab.active{background:var(--navy);color:#fff}.notice{padding:10px;background:#eef7ff;border-left:4px solid var(--blue);border-radius:8px;font-size:12px;margin-bottom:12px}
+.modal{position:fixed;inset:0;background:#06182799;display:flex;align-items:center;justify-content:center;padding:15px;z-index:20}.modalbox{width:min(680px,100%);max-height:92dvh;overflow:auto;background:#fff;border-radius:17px;padding:18px;box-shadow:0 20px 70px #0004}.modalhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}.close{background:#eef2f6;border-radius:99px;width:34px;height:34px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.field{margin-bottom:10px}.field label{display:block;font-size:12px;font-weight:750;margin-bottom:5px}.login{position:fixed;inset:0;background:linear-gradient(145deg,var(--navy),#1c78a9);display:flex;align-items:center;justify-content:center;padding:20px;z-index:50}.loginbox{width:min(430px,100%);background:#fff;border-radius:20px;padding:22px;box-shadow:0 25px 80px #0005}.loginlogo{text-align:center;font-size:44px}.toast{position:fixed;right:15px;bottom:88px;background:var(--navy);color:#fff;padding:12px 15px;border-radius:11px;z-index:80;box-shadow:var(--shadow)}
+.toast{display:flex;align-items:center;gap:11px;min-width:250px;max-width:min(390px,calc(100vw - 30px));padding:13px 16px;border:1px solid #dbe7ef;background:#fff;color:#183047;border-radius:14px;box-shadow:0 12px 36px #0b2a4a26;animation:toastIn .22s ease-out}
+.toast .toast-mark{width:32px;height:32px;display:grid;place-items:center;flex:none;border-radius:50%;background:#dcfce7;color:#15803d;font-size:17px}
+.toast.toast-error .toast-mark{background:#fee2e2;color:#b91c1c}
+.toast.toast-info .toast-mark{background:#e0f2fe;color:#0369a1}
+.toast .toast-copy{min-width:0}
+.toast .toast-title{font-size:12px;font-weight:600;color:#102a43;margin-bottom:2px}
+.toast .toast-message{font-size:11px;color:#64748b;line-height:1.4;overflow-wrap:anywhere}
+@keyframes toastIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+table{width:100%;border-collapse:collapse;font-size:12px}th,td{padding:8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}.scroll{overflow:auto}.empty{text-align:center;color:var(--muted);padding:35px 10px}.settingmenu{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px}.settingtab{padding:9px 12px;background:#edf5fa;border-radius:9px}.settingtab.active{background:var(--navy);color:#fff}.notice{padding:10px;background:#eef7ff;border-left:4px solid var(--blue);border-radius:8px;font-size:12px;margin-bottom:12px}
 @media(max-width:800px){.report-window,.settings-window{width:98%;max-height:calc(100dvh - 145px);margin:0 auto}.report-toolbar .input,.report-toolbar .select{max-width:none!important;flex:1;min-width:115px}.main{grid-template-columns:1fr}.cart{min-height:42dvh}.products{grid-template-columns:repeat(auto-fill,minmax(125px,1fr))}.topbar{height:58px;padding:0 10px}.brand{font-size:16px}.status{font-size:11px;gap:6px}.status .pill:first-child{display:none}.footer-nav{height:62px}.navbtn{min-width:0;flex:1;font-size:12px}.grid2{grid-template-columns:1fr}}
 @media(min-width:801px) and (max-width:1100px){.main{grid-template-columns:minmax(0,1.35fr) minmax(290px,.8fr)}}
 @media(orientation:landscape) and (max-height:600px){.topbar{height:52px}.main{padding:8px;gap:8px}.footer-nav{height:58px}.products{padding:8px;grid-template-columns:repeat(auto-fill,minmax(125px,1fr))}.pic{height:82px}}
@@ -602,6 +611,197 @@ body {
   }
 }
 </style>
+
+<style id="desktop-independent-menu-cart-scroll">
+/* Desktop: menu and transaction panels stay in the viewport.
+   Menu cards scroll independently; transaction rows scroll inside the cart. */
+@media (min-width: 901px) {
+  html, body {
+    height: 100% !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+  }
+  #app.app {
+    height: 100dvh !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+  }
+  #app .main {
+    flex: 1 1 0 !important;
+    min-height: 0 !important;
+    height: auto !important;
+    overflow: hidden !important;
+    grid-template-columns: minmax(0, 1.65fr) minmax(310px, .85fr) !important;
+  }
+  #app .menu-panel,
+  #app .cart {
+    height: 100% !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+  }
+  #app .menu-panel {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  #app .products {
+    flex: 1 1 0 !important;
+    min-height: 0 !important;
+    height: 0 !important;
+    max-height: none !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    align-content: start;
+  }
+  #app .cart {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  #app .cart-table {
+    flex: 1 1 0 !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+  }
+  #app .cartitems {
+    flex: 1 1 0 !important;
+    min-height: 0 !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+  }
+  #app .summary {
+    flex: 0 0 auto !important;
+  }
+  #app .footer-nav {
+    flex: 0 0 72px !important;
+  }
+}
+</style>
+
+
+<style id="restore-product-name-price-display">
+@media (min-width: 901px) {
+  #app .products {
+    grid-auto-rows: max-content !important;
+    align-content: start !important;
+  }
+  #app .product {
+    display: flex !important;
+    flex-direction: column !important;
+    align-self: start !important;
+    height: auto !important;
+    min-height: 0 !important;
+  }
+  #app .product .pic {
+    display: flex !important;
+    flex: 0 0 92px !important;
+    width: 100% !important;
+    height: 92px !important;
+  }
+  #app .product .pinfo {
+    display: block !important;
+    flex: 0 0 auto !important;
+    width: 100% !important;
+    min-height: 58px !important;
+    padding: 9px !important;
+    overflow: visible !important;
+    color: #183047 !important;
+    background: #fff !important;
+  }
+  #app .product .pname,
+  #app .product .price {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+}
+</style>
+
+
+<style id="transaction-no-inner-scroll">
+/* Desktop: keep every transaction row visible; only the menu catalog has its own scrollbar.
+   If the cart grows, the document grows naturally instead of hiding rows in an inner scroll area. */
+@media (min-width: 901px) {
+  html, body {
+    height: auto !important;
+    min-height: 100% !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+  }
+  #app.app {
+    height: auto !important;
+    min-height: 100dvh !important;
+    overflow: visible !important;
+  }
+  #app .main {
+    flex: 1 0 auto !important;
+    min-height: 0 !important;
+    height: auto !important;
+    overflow: visible !important;
+    align-items: start !important;
+    grid-template-columns: minmax(0, 1.65fr) minmax(310px, .85fr) !important;
+  }
+  #app .menu-panel {
+    height: calc(100dvh - 185px) !important;
+    min-height: 360px !important;
+    overflow: hidden !important;
+  }
+  #app .products {
+    flex: 1 1 0 !important;
+    min-height: 0 !important;
+    height: 0 !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+  }
+  #app .cart {
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+    align-self: start !important;
+  }
+  #app .cart-table {
+    flex: 0 0 auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+  }
+  #app .cartitems {
+    flex: 0 0 auto !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+  #app .summary {
+    flex: 0 0 auto !important;
+  }
+  #app .footer-nav {
+    flex: 0 0 72px !important;
+  }
+}
+</style>
+
+
+<style id="sticky-bottom-navigation-final">
+/* Keep the main POS navigation accessible while the page/transaction list grows. */
+#app .footer-nav {
+  position: fixed !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  z-index: 1000 !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  flex: none !important;
+  min-height: 72px !important;
+  background: rgba(255,255,255,.98) !important;
+  box-shadow: 0 -3px 14px rgba(15,35,55,.08) !important;
+}
+/* Reserve space so the fixed bar never covers the last transaction or action. */
+#app { padding-bottom: 82px !important; box-sizing: border-box !important; }
+@media (max-width: 800px) {
+  #app .footer-nav { min-height: 62px !important; height: 62px !important; padding-bottom: max(7px, env(safe-area-inset-bottom)) !important; }
+  #app { padding-bottom: 72px !important; }
+}
+</style>
+
 </head>
 <body>
 <div id="app" class="app hidden"></div>
@@ -640,6 +840,14 @@ function load(){
    const x=JSON.parse(localStorage.getItem(KEY));
    const d=x||structuredClone(defaults);
    d.shiftSessions=d.shiftSessions||[];
+   d.products=Array.isArray(d.products)?d.products:[];
+   // Rapikan data menu lama saat aplikasi dibuka, tanpa menghapus foto manual yang sudah ada.
+   d.products.forEach(p=>{
+     p.cat=toProperCase(p.cat||'Lain-lain');
+     p.name=toProperCase(p.name||'');
+     p.icon=iconFor(p.cat);
+   });
+   if(x)localStorage.setItem(KEY,JSON.stringify(d));
    return d;
  }catch(e){return structuredClone(defaults)}
 }
@@ -673,7 +881,20 @@ function dateKey(d=new Date()){
  return `${y}-${m}-${day}`;
 }
 function shiftBusinessDate(s,d=new Date()){let x=new Date(d);if(String(s)==='3' && x.getHours()<7)x.setDate(x.getDate()-1);return dateKey(x)}
-function toast(t){const el=document.getElementById('toast');el.textContent=t;el.classList.remove('hidden');setTimeout(()=>el.classList.add('hidden'),2600)}
+let toastTimer=null;
+function toast(t,type='success'){
+ const el=document.getElementById('toast');
+ const message=String(t??'');
+ const isError=type==='error'||/gagal|tidak valid|wajib diisi/i.test(message);
+ const kind=isError?'error':(type==='info'?'info':'success');
+ const title=kind==='error'?'Belum berhasil':(kind==='info'?'Informasi':'Berhasil');
+ const mark=kind==='error'?'!':(kind==='info'?'i':'✓');
+ el.className=`toast toast-${kind}`;
+ el.innerHTML=`<span class="toast-mark">${mark}</span><span class="toast-copy"><span class="toast-title">${title}</span><span class="toast-message">${esc(message)}</span></span>`;
+ el.classList.remove('hidden');
+ clearTimeout(toastTimer);
+ toastTimer=setTimeout(()=>el.classList.add('hidden'),3200);
+}
 function showPaymentNotice(title,message,type='success'){
  const old=document.getElementById('paymentNoticeBackdrop'); if(old)old.remove();
  const icon=type==='success'?'✓':'ⓘ';
@@ -684,7 +905,7 @@ function showPaymentNotice(title,message,type='success'){
  document.body.appendChild(wrap);
 }
 function closePaymentNotice(){const el=document.getElementById('paymentNoticeBackdrop');if(el)el.remove()}
-function iconFor(c){return {Kopi:'☕','Non Kopi':'🥤',Makanan:'🍛',Cemilan:'🍟',Additional:'➕'}[c]||'🍽️'}
+function iconFor(c){const key=String(c??'').trim().toLocaleLowerCase('id-ID');return {'kopi':'☕','non kopi':'🥤','makanan':'🍛','cemilan':'🍟','additional':'➕','lain-lain':'🍽️'}[key]||'🍽️'}
 function getSession(id){return (db.shiftSessions||[]).find(s=>s.id===id)}
 function getActiveSession(shift,bizDate=shiftBusinessDate(shift)){
  return (db.shiftSessions||[]).find(s=>s.shift===String(shift)&&s.businessDate===bizDate&&!s.closed);
@@ -731,7 +952,7 @@ function render(){
 setInterval(updateClock,1000);
 function updateClock(){const e=document.getElementById('clock');if(e)e.textContent=now().toLocaleString('id-ID',{dateStyle:'short',timeStyle:'medium'})}
 function cashierHTML(){
- const cats=['Semua','Kopi','Non Kopi','Makanan','Cemilan','Additional','Lain-lain'];
+ const cats=['Semua',...new Set(['Kopi','Non Kopi','Makanan','Cemilan','Additional','Lain-lain',...db.products.map(p=>p.cat).filter(Boolean)])];
  const q=window.menuQ||'';
  const ps=db.products.filter(p=>(state.category==='Semua'||p.cat===state.category)&&(`${p.name} ${p.cat}`).toLowerCase().includes(q.toLowerCase()));
  return `<section class="panel menu-panel"><div class="toolbar"><input class="input search" value="${esc(q)}" oninput="window.menuQ=this.value;filterMenuProducts()" placeholder="🔎 Cari menu..."></div><div class="cats">${cats.map(c=>`<button class="cat ${state.category===c?'active':''}" onclick="state.category='${c}';render()">${c}</button>`).join('')}</div><div class="products">${ps.length?ps.map(p=>`<button class="product" onclick="addCart('${p.id}')"><div class="pic">${p.img?`<img src="${p.img}">`:iconFor(p.cat)}</div><div class="pinfo"><div class="pname">${esc(p.name)}</div><div class="price">${rupiah(p.price)}</div></div></button>`).join(''):'<div class="empty" style="grid-column:1/-1">Menu tidak ditemukan.</div>'}</div></section>${cartHTML()}`;
@@ -914,6 +1135,7 @@ function closeShift(){
         <select id="rShift" class="select" style="max-width:130px"><option value="">Semua Shift</option><option>1</option><option>2</option><option>3</option></select>
         <button class="btn primary" onclick="refreshReport()">Terapkan</button>
         <button class="btn light" onclick="printOwnerDailyReport()">Print Laporan</button>
+        ${isGuest?`<button class="btn light ${btState==='connected'?'bt-connected':''}" id="reportBtBtn" onclick="bt()" title="${btState==='connected'?'Klik untuk memutuskan Bluetooth printer':'Hubungkan printer Bluetooth untuk mencetak laporan'}">🖨️ <span id="reportBtText">${btState==='pairing'?'⟳ Pairing…':btState==='connected'?'Putuskan BT':'Connect Bluetooth'}</span></button>`:''}
         <button class="btn light" onclick="exportExcel()">Export Excel</button>
         ${active&&!active.closed?'<button class="btn danger" onclick="closeShift()">Closing Shift</button>':''}
       </div>
@@ -1589,19 +1811,24 @@ async function autoReconnectBluetooth(){
 
 function setBTState(s){
   btState=s;
-  const b=document.getElementById('btNavBtn'),t=document.getElementById('btNavText');
-  if(!b||!t)return;
-  b.classList.toggle('bt-connected',s==='connected');
-  if(s==='pairing'){
-    t.innerHTML='<span class="bt-spin">⟳</span> Pairing…';
-    b.title='Sedang pairing. Klik lagi untuk memilih ulang printer Bluetooth';
-  }else if(s==='connected'){
-    t.textContent='Putuskan BT';
-    b.title='Klik untuk memutuskan Bluetooth printer';
-  }else{
-    t.textContent='Connect BT';
-    b.title='Bluetooth Direct (BLE/GATT). MP-80M SPP gunakan RawBT.';
-  }
+  const buttons=[
+    {b:document.getElementById('btNavBtn'),t:document.getElementById('btNavText'),connected:'Putuskan BT',disconnected:'Connect BT'},
+    {b:document.getElementById('reportBtBtn'),t:document.getElementById('reportBtText'),connected:'Putuskan BT',disconnected:'Connect Bluetooth'}
+  ];
+  buttons.forEach(({b,t,connected,disconnected})=>{
+    if(!b||!t)return;
+    b.classList.toggle('bt-connected',s==='connected');
+    if(s==='pairing'){
+      t.innerHTML='<span class="bt-spin">⟳</span> Pairing…';
+      b.title='Sedang pairing. Klik lagi untuk memilih ulang printer Bluetooth';
+    }else if(s==='connected'){
+      t.textContent=connected;
+      b.title='Klik untuk memutuskan Bluetooth printer';
+    }else{
+      t.textContent=disconnected;
+      b.title='Bluetooth Direct (BLE/GATT). MP-80M SPP gunakan RawBT.';
+    }
+  });
 }
 
 // Sinkronkan indikator dengan status GATT yang sebenarnya, bukan hanya flag lama.
@@ -1636,9 +1863,29 @@ document.addEventListener('visibilitychange',()=>{
 });
 
 function openSettings(){state.screen='pengaturan';render()}
-function settingsHTML(){return `<section class="panel settings-shell"><div class="settings-window"><div class="report-titlebar"><div><b>⚙️ Pengaturan</b><div class="mini">Konfigurasi tempat, menu, QRIS, dan backup</div></div><button class="close" onclick="closeSettings()">×</button></div><div style="padding:16px"><div class="settingmenu"><button class="settingtab active">Umum</button><button class="settingtab" onclick="menuManager()">Daftar Menu</button><button class="settingtab" onclick="backupData()">Backup</button><button class="settingtab" onclick="restoreData()">Restore</button><button class="settingtab danger" onclick="wipe()">Hapus Semua Data</button></div><div class="grid2"><div class="field"><label>Nama Tempat</label><input id="setName" class="input" value="${esc(db.settings.name)}"></div><div class="field"><label>PPN (%)</label><input id="setTax" class="input" type="number" min="0" value="${db.settings.tax||''}"></div></div><div class="field"><label>Alamat</label><input id="setAddress" class="input" value="${esc(db.settings.address)}"></div><div class="grid2"><div class="field"><label>Logo Struk</label><input id="logoFile" type="file" accept="image/*" class="input"></div><div class="field"><label>QRIS</label><input id="qrisFile" type="file" accept="image/*" class="input"></div></div><button class="btn primary" onclick="saveSettings()">Simpan Pengaturan</button></div></section>`}
+function settingsHTML(){return `<section class="panel settings-shell"><div class="settings-window"><div class="report-titlebar"><div><b>⚙️ Pengaturan</b><div class="mini">Konfigurasi tempat, menu, QRIS, dan backup</div></div><button class="close" onclick="closeSettings()">×</button></div><div style="padding:16px"><div class="settingmenu"><button class="settingtab active">Umum</button><button class="settingtab" onclick="menuManager()">Daftar Menu</button><button class="settingtab" onclick="backupData()">Backup</button><button class="settingtab" onclick="restoreData()">Restore</button><button class="settingtab danger" onclick="wipe()">Hapus Semua Data</button></div><div class="grid2"><div class="field"><label>Nama Tempat</label><input id="setName" class="input" value="${esc(db.settings.name)}"></div><div class="field"><label>PPN (%)</label><input id="setTax" class="input" type="number" min="0" value="${db.settings.tax||''}"></div></div><div class="field"><label>Alamat</label><input id="setAddress" class="input" value="${esc(db.settings.address)}"></div><div class="grid2"><div class="field"><label>Logo Struk</label><input id="logoFile" type="file" accept="image/*" class="input">${db.settings.logo?`<div style="margin-top:8px;display:flex;align-items:center;gap:8px"><img src="${db.settings.logo}" alt="Logo tersimpan" style="max-width:100px;max-height:65px;object-fit:contain;border:1px solid var(--line);border-radius:8px;padding:4px"><button class="btn danger" onclick="removeSavedImage('logo')">Hapus Logo</button></div>`:'<div class="mini" style="margin-top:6px">Belum ada logo tersimpan.</div>'}</div><div class="field"><label>QRIS</label><input id="qrisFile" type="file" accept="image/*" class="input">${db.settings.qris?`<div style="margin-top:8px;display:flex;align-items:center;gap:8px"><img src="${db.settings.qris}" alt="QRIS tersimpan" style="max-width:100px;max-height:100px;object-fit:contain;border:1px solid var(--line);border-radius:8px;padding:4px"><button class="btn danger" onclick="removeSavedImage('qris')">Hapus QRIS</button></div>`:'<div class="mini" style="margin-top:6px">Belum ada QRIS tersimpan.</div>'}</div></div><button class="btn primary" onclick="saveSettings()">Simpan Pengaturan</button></div></section>`}
 function closeSettings(){state.screen='kasir';render()}
-function saveSettings(){const finish=(logo,qris)=>{db.settings.name=document.getElementById('setName').value.trim()||'Warkop';db.settings.address=document.getElementById('setAddress').value.trim();db.settings.tax=Number(document.getElementById('setTax').value)||0;if(logo)db.settings.logo=logo;if(qris)db.settings.qris=qris;save();toast('Pengaturan tersimpan.');render()};Promise.all([file64(document.getElementById('logoFile').files[0]),file64(document.getElementById('qrisFile').files[0])]).then(x=>finish(x[0],x[1]))}
+async function saveSettings(){
+  try{
+    const logo=await file64(document.getElementById('logoFile').files[0]);
+    const qris=await file64(document.getElementById('qrisFile').files[0]);
+    db.settings.name=document.getElementById('setName').value.trim()||'Warkop';
+    db.settings.address=document.getElementById('setAddress').value.trim();
+    db.settings.tax=Number(document.getElementById('setTax').value)||0;
+    if(logo)db.settings.logo=logo;if(qris)db.settings.qris=qris;
+    save();render();toast('Pengaturan berhasil disimpan.');
+  }catch(e){toast('Gagal menyimpan pengaturan: '+(e.message||'Terjadi kesalahan.'));}
+}
+function removeSavedImage(type){
+  const isLogo=type==='logo';
+  const label=isLogo?'logo':'QRIS';
+  if(!confirm(`Hapus ${label} yang tersimpan?`))return;
+  try{
+    if(isLogo)db.settings.logo='';else db.settings.qris='';
+    save();render();
+    toast(`${label} berhasil dihapus.`);
+  }catch(e){toast(`Gagal menghapus ${label}: `+(e.message||'Terjadi kesalahan.'));}
+}
 function file64(f){return new Promise(r=>{if(!f)return r('');const fr=new FileReader();fr.onload=()=>r(fr.result);fr.readAsDataURL(f)})}
 function menuManager(){modal(`<div class="modalhead"><h3>Daftar Menu</h3><button class="close" onclick="closeModal()">×</button></div><div id="menuEditor">${menuEditorHTML()}</div>`)}
 function getCategoryOptions(selected = '') {
@@ -1665,6 +1912,12 @@ function getCategoryOptions(selected = '') {
 }
 function menuEditorHTML() {
   return `
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
+      <button class="btn light" onclick="downloadMenuTemplate()">Download Template Excel</button>
+      <button class="btn primary" onclick="document.getElementById('menuExcelFile').click()">Upload Menu Excel</button>
+      <input id="menuExcelFile" type="file" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" class="hidden" onchange="uploadMenuExcel(this.files[0])">
+    </div>
+    
     <div class="grid2">
       <div class="field">
         <label>Kategori</label>
@@ -1722,7 +1975,119 @@ function menuEditorHTML() {
     </div>
   `;
 }
-function addProduct(){const cat=document.getElementById('mCat').value.trim(),name=document.getElementById('mName').value.trim(),price=Number(document.getElementById('mPrice').value);if(!cat||!name||!price)return toast('Kategori, nama, dan harga wajib diisi.');file64(document.getElementById('mFile').files[0]).then(img=>{db.products.push({id:'p'+Date.now(),cat,name,price,icon:iconFor(cat),img});save();menuManager();render()})}
+
+function downloadMenuTemplate(){
+  const blob=xlsxBlob([{name:'Template Menu',rows:[['Kategori','Menu','Harga'],['Kopi','Kopi Susu',14000]]}]);
+  const url=URL.createObjectURL(blob),a=document.createElement('a');
+  a.href=url;a.download='Template_Penambahan_Menu.xlsx';
+  document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+function normalizeMenuName(value){
+  return String(value??'').normalize('NFKC').trim().replace(/\s+/g,' ').toLocaleLowerCase('id-ID');
+}
+function toProperCase(value){
+  return String(value??'').normalize('NFKC').trim().replace(/\s+/g,' ')
+    .toLocaleLowerCase('id-ID')
+    .replace(/(^|[\s-])([\p{L}])/gu,(match,separator,letter)=>separator+letter.toLocaleUpperCase('id-ID'));
+}
+async function uploadMenuExcel(file){
+  if(!file)return;
+  try{
+    const rows=await readMenuXlsx(file);
+    if(!rows.length)throw new Error('File Excel tidak memiliki data menu.');
+    const header=rows[0].map(x=>String(x??'').trim().toLocaleLowerCase('id-ID'));
+    const ci={cat:header.indexOf('kategori'),name:header.indexOf('menu'),price:header.indexOf('harga')};
+    if(Object.values(ci).some(i=>i<0))throw new Error('Header wajib harus persis: Kategori, Menu, Harga.');
+    const parsed=[];
+    for(let i=1;i<rows.length;i++){
+      const r=rows[i]||[];
+      if(r.every(v=>String(v??'').trim()===''))continue;
+      const cat=toProperCase(r[ci.cat]),name=toProperCase(r[ci.name]);
+      const raw=String(r[ci.price]??'').trim();
+      const price=typeof r[ci.price]==='number'?r[ci.price]:Number(raw.replace(/[^\d.-]/g,''));
+      if(!cat||!name||!Number.isFinite(price)||price<=0)
+        throw new Error(`Data baris ${i+1} tidak valid. Pastikan Kategori, Menu, dan Harga terisi dengan benar.`);
+      parsed.push({cat,name,price:Math.round(price)});
+    }
+    if(!parsed.length)throw new Error('Tidak ada daftar menu yang dapat diproses.');
+    if(!confirm(`Proses ${parsed.length} daftar menu dari Excel?`))return;
+    let added=0,updated=0;
+    parsed.forEach((item,i)=>{
+      const key=normalizeMenuName(item.name);
+      const existing=db.products.find(p=>normalizeMenuName(p.name)===key);
+      if(existing){
+        existing.cat=item.cat;existing.name=item.name;existing.price=item.price;
+        existing.icon=iconFor(item.cat);existing.img='';
+        updated++;
+      }else{
+        db.products.push({id:'p'+Date.now()+'_'+i+'_'+Math.random().toString(36).slice(2,6),cat:item.cat,name:item.name,price:item.price,icon:iconFor(item.cat),img:''});
+        added++;
+      }
+    });
+    save();menuManager();render();
+    toast(`Upload Excel selesai: ${added} menu baru ditambahkan dan ${updated} menu diperbarui.`);
+  }catch(err){toast('Upload Excel gagal: '+(err.message||err));}
+}
+async function readMenuXlsx(file){
+  if(typeof DecompressionStream==='undefined')throw new Error('Browser ini belum mendukung pembacaan Excel. Gunakan Chrome versi terbaru.');
+  const bytes=new Uint8Array(await file.arrayBuffer());
+  const view=new DataView(bytes.buffer,bytes.byteOffset,bytes.byteLength);
+  const findSig=(sig,start=0)=>{for(let i=start;i<=bytes.length-4;i++)if(view.getUint32(i,true)===sig)return i;return -1};
+  const eocd=findSig(0x06054b50,Math.max(0,bytes.length-65557));
+  if(eocd<0)throw new Error('Format file Excel tidak valid.');
+  const count=view.getUint16(eocd+10,true),centralOffset=view.getUint32(eocd+16,true);
+  const entries={};let pos=centralOffset;
+  for(let n=0;n<count;n++){
+    if(view.getUint32(pos,true)!==0x02014b50)throw new Error('Struktur Excel tidak valid.');
+    const method=view.getUint16(pos+10,true),compressed=view.getUint32(pos+20,true),nameLen=view.getUint16(pos+28,true),extraLen=view.getUint16(pos+30,true),commentLen=view.getUint16(pos+32,true),localOffset=view.getUint32(pos+42,true);
+    const name=new TextDecoder().decode(bytes.slice(pos+46,pos+46+nameLen));
+    const ln=view.getUint16(localOffset+26,true),le=view.getUint16(localOffset+28,true),start=localOffset+30+ln+le;
+    entries[name]={method,data:bytes.slice(start,start+compressed)};
+    pos+=46+nameLen+extraLen+commentLen;
+  }
+  async function unzip(name){
+    const e=entries[name];if(!e)return '';
+    let out=e.data;
+    if(e.method===8){
+      const ds=new DecompressionStream('deflate-raw');
+      out=new Uint8Array(await new Response(new Blob([out]).stream().pipeThrough(ds)).arrayBuffer());
+    }else if(e.method!==0)throw new Error('Kompresi file Excel tidak didukung.');
+    return new TextDecoder().decode(out);
+  }
+  const parse=x=>new DOMParser().parseFromString(x,'application/xml');
+  const wb=parse(await unzip('xl/workbook.xml')),rels=parse(await unzip('xl/_rels/workbook.xml.rels'));
+  const firstSheet=wb.getElementsByTagName('sheet')[0];if(!firstSheet)throw new Error('Sheet Excel tidak ditemukan.');
+  const rid=firstSheet.getAttribute('r:id');
+  const rel=[...rels.getElementsByTagName('Relationship')].find(x=>x.getAttribute('Id')===rid);
+  if(!rel)throw new Error('Relasi sheet Excel tidak ditemukan.');
+  let target=rel.getAttribute('Target').replace(/^\//,'');
+  if(!target.startsWith('xl/'))target='xl/'+target.replace(/^\.?\//,'');
+  const sheetDoc=parse(await unzip(target));
+  const ssDoc=entries['xl/sharedStrings.xml']?parse(await unzip('xl/sharedStrings.xml')):null;
+  const shared=ssDoc?[...ssDoc.getElementsByTagName('si')].map(si=>[...si.getElementsByTagName('t')].map(t=>t.textContent).join('')):[];
+  const colIndex=ref=>{let n=0;for(const c of ref.match(/[A-Z]+/i)?.[0]||'A')n=n*26+c.toUpperCase().charCodeAt(0)-64;return n-1};
+  return [...sheetDoc.getElementsByTagName('row')].map(row=>{
+    const arr=[];
+    [...row.getElementsByTagName('c')].forEach(c=>{
+      const idx=colIndex(c.getAttribute('r')||'A1'),type=c.getAttribute('t'),v=c.getElementsByTagName('v')[0]?.textContent??'';
+      let value=type==='s'?shared[Number(v)]??'':type==='inlineStr'?[...c.getElementsByTagName('t')].map(t=>t.textContent).join(''):v;
+      arr[idx]=type==='s'||type==='inlineStr'?value:(v===''?'':Number(v));
+    });
+    return arr;
+  });
+}
+async function addProduct(){
+  const cat=toProperCase(document.getElementById('mCat').value),name=toProperCase(document.getElementById('mName').value),price=Number(document.getElementById('mPrice').value);
+  if(!cat||!name||!price||price<=0)return toast('Kategori, nama menu, dan harga wajib diisi dengan benar.','error');
+  if(db.products.some(p=>normalizeMenuName(p.name)===normalizeMenuName(name)))
+    return toast(`Menu "${name}" sudah terdaftar.`, 'error');
+  try{
+    const img=await file64(document.getElementById('mFile').files[0]);
+    db.products.push({id:'p'+Date.now(),cat,name,price,icon:iconFor(cat),img});
+    save();menuManager();render();toast('Menu baru berhasil ditambahkan.');
+  }catch(e){toast('Gagal menambahkan menu: '+(e.message||'Terjadi kesalahan.'),'error');}
+}
 function editProduct(id) {
   const p = db.products.find(x => x.id === id);
   if (!p) return;
@@ -1761,9 +2126,9 @@ function saveEditedProduct(id) {
   const p = db.products.find(x => x.id === id);
   if (!p) return;
 
-  const name = document.getElementById('editName').value.trim();
+  const name = toProperCase(document.getElementById('editName').value);
   const price = Number(document.getElementById('editPrice').value);
-  const cat = document.getElementById('editCat').value;
+  const cat = toProperCase(document.getElementById('editCat').value);
 
   if (!name || !price || !cat) {
     return toast('Nama, harga, dan kategori wajib diisi.');
@@ -1779,8 +2144,35 @@ function saveEditedProduct(id) {
   menuManager();
 }
 function deleteProduct(id){if(confirm('Hapus menu ini?')){db.products=db.products.filter(p=>p.id!==id);save();menuManager();render()}}
-function backupData(){const blob=new Blob([JSON.stringify(db,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='backup-warkop-'+dateKey()+'.json';a.click();toast('Backup dibuat.')}
-function restoreData(){const i=document.createElement('input');i.type='file';i.accept='.json,application/json';i.onchange=()=>{const f=i.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const x=JSON.parse(r.result);if(!x.settings||!x.products)throw 0;db=x;save();toast('Restore berhasil.');render()}catch(e){toast('File backup tidak valid.')}};r.readAsText(f)};i.click()}
+function backupData(){
+  try{
+    const blob=new Blob([JSON.stringify(db,null,2)],{type:'application/json'});
+    const url=URL.createObjectURL(blob),a=document.createElement('a');
+    a.href=url;a.download='backup-warkop-'+dateKey()+'.json';
+    document.body.appendChild(a);a.click();a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),1500);
+    toast('Backup berhasil dibuat dan diunduh.');
+  }catch(e){toast('Backup gagal: '+(e.message||'Terjadi kesalahan.'));}
+}
+function restoreData(){
+  const i=document.createElement('input');i.type='file';i.accept='.json,application/json';
+  i.onchange=()=>{
+    const f=i.files&&i.files[0];if(!f)return;
+    const r=new FileReader();
+    r.onerror=()=>toast('Restore gagal: file tidak dapat dibaca.');
+    r.onload=()=>{
+      try{
+        const x=JSON.parse(r.result);
+        if(!x||typeof x!=='object'||!x.settings||!Array.isArray(x.products))throw new Error('Struktur file backup tidak valid.');
+        const previous=db;db=x;
+        try{save();}catch(err){db=previous;throw err;}
+        toast('Restore berhasil. Data berhasil dipulihkan.');render();
+      }catch(e){toast('Restore gagal: '+(e.message||'File backup tidak valid.'));}
+    };
+    r.readAsText(f);
+  };
+  i.click();
+}
 function wipe(){if(confirm('Hapus SEMUA data termasuk transaksi dan menu?')){localStorage.removeItem(KEY);db=load();state.cart=[];toast('Semua data dihapus.');render()}}
 function modal(html){const m=document.getElementById('modal');m.innerHTML=`<div class="modalbox">${html}</div>`;m.classList.remove('hidden')}
 function closeModal(){document.getElementById('modal').classList.add('hidden')}
