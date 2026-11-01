@@ -1135,7 +1135,7 @@ function closeShift(){
         <select id="rShift" class="select" style="max-width:130px"><option value="">Semua Shift</option><option>1</option><option>2</option><option>3</option></select>
         <button class="btn primary" onclick="refreshReport()">Terapkan</button>
         <button class="btn light" onclick="printOwnerDailyReport()">Print Laporan</button>
-        ${isGuest?`<button class="btn light ${btState==='connected'?'bt-connected':''}" id="reportBtBtn" onclick="bt()" title="${btState==='connected'?'Klik untuk memutuskan Bluetooth printer':'Hubungkan printer Bluetooth untuk mencetak laporan'}">🖨️ <span id="reportBtText">${btState==='pairing'?'⟳ Pairing…':btState==='connected'?'Putuskan BT':'Connect Bluetooth'}</span></button>`:''}
+        <button class="btn light ${btState==='connected'?'bt-connected':''}" id="reportBtBtn" onclick="bt()" title="${btState==='connected'?'Klik untuk memutuskan Bluetooth printer':'Hubungkan printer Bluetooth untuk mencetak laporan'}">🖨️ <span id="reportBtText">${btState==='pairing'?'⟳ Pairing…':btState==='connected'?'Putuskan BT':'Connect Bluetooth'}</span></button>
         <button class="btn light" onclick="exportExcel()">Export Excel</button>
         ${active&&!active.closed?'<button class="btn danger" onclick="closeShift()">Closing Shift</button>':''}
       </div>
@@ -1596,7 +1596,7 @@ async function printReceipt(s,isVoid=false,reprint=false){
   if(syncBTConnection()){
     try{
       await writeBluetoothReceipt(plainText);
-      toast('Struk berhasil dicetak langsung via Bluetooth.');
+      toast('Struk berhasil dicetak.');
       return;
     }catch(e){
       console.error('Direct Web Bluetooth print failed:',e);
@@ -1617,6 +1617,8 @@ let lastBTDevice=null;
 const btDisconnectHandlers=new WeakSet();
 
 async function bt(){
+  // Tombol manual selalu tersedia; jika ditekan, hentikan timer auto-connect
+  // agar pemilihan printer oleh kasir menjadi prioritas.
   if(autoBTTimer){clearTimeout(autoBTTimer);autoBTTimer=null;}
   if(btState==='connected'){
     // Jika diputus manual, hentikan percobaan sambung ulang otomatis.
@@ -1630,6 +1632,9 @@ async function bt(){
 
   // Pairing boleh dicoba kembali kapan saja. Ini penting jika pengguna
   // berpindah menu sehingga dialog Bluetooth sebelumnya dibatalkan browser.
+  // Hentikan auto-reconnect saat pengguna memilih printer secara manual.
+  // Ini mencegah proses latar belakang membatalkan token pairing pengguna.
+  try{localStorage.setItem('posBtAutoReconnect','0')}catch(e){}
   const pairingToken=++btPairingToken;
   setBTState('pairing');
 
@@ -1771,14 +1776,14 @@ function isAutoBTEnabled(){
   try{return localStorage.getItem('posBtAutoReconnect')==='1'}catch(e){return false}
 }
 function scheduleAutoReconnect(delay=5000){
-  if(!isAutoBTEnabled()||autoBTTimer)return;
+  if(btState!=='disconnected'||!isAutoBTEnabled()||autoBTTimer)return;
   autoBTTimer=setTimeout(()=>{
     autoBTTimer=null;
     autoReconnectBluetooth();
   },delay);
 }
 async function autoReconnectBluetooth(){
-  if(autoBTBusy||!isAutoBTEnabled()||syncBTConnection())return;
+  if(btState!=='disconnected'||autoBTBusy||!isAutoBTEnabled()||syncBTConnection())return;
   if(!navigator.bluetooth)return;
   autoBTBusy=true;
   const token=++btPairingToken;
@@ -1789,7 +1794,11 @@ async function autoReconnectBluetooth(){
       const permitted=await navigator.bluetooth.getDevices();
       let wantedId='';
       try{wantedId=localStorage.getItem('posBtDeviceId')||''}catch(e){}
-      device=permitted.find(d=>wantedId&&d.id===wantedId)||permitted[0]||null;
+      // Jika ID printer terakhir tersimpan, hanya pilih perangkat itu.
+      // Jangan sampai otomatis tersambung ke perangkat Bluetooth lain.
+      device=wantedId
+        ? (permitted.find(d=>d.id===wantedId)||null)
+        : (permitted[0]||null);
     }
     if(!device){
       setBTState('disconnected');
@@ -1816,8 +1825,9 @@ function setBTState(s){
     {b:document.getElementById('reportBtBtn'),t:document.getElementById('reportBtText'),connected:'Putuskan BT',disconnected:'Connect Bluetooth'}
   ];
   buttons.forEach(({b,t,connected,disconnected})=>{
-    if(!b||!t)return;
+    if(!b)return;
     b.classList.toggle('bt-connected',s==='connected');
+    if(!t)return;
     if(s==='pairing'){
       t.innerHTML='<span class="bt-spin">⟳</span> Pairing…';
       b.title='Sedang pairing. Klik lagi untuk memilih ulang printer Bluetooth';
@@ -1826,7 +1836,7 @@ function setBTState(s){
       b.title='Klik untuk memutuskan Bluetooth printer';
     }else{
       t.textContent=disconnected;
-      b.title='Bluetooth Direct (BLE/GATT). MP-80M SPP gunakan RawBT.';
+      b.title='Bluetooth Direct (BLE/GATT).';
     }
   });
 }
@@ -1852,18 +1862,18 @@ function syncBTConnection(){
 // Polling membantu memperbarui tombol ketika printer mati/di luar jangkauan.
 setInterval(()=>{
   if(btState==='connected') syncBTConnection();
-  else if(isAutoBTEnabled()) scheduleAutoReconnect(1000);
+  else if(btState==='disconnected' && isAutoBTEnabled()) scheduleAutoReconnect(1000);
 },1500);
 window.addEventListener('pageshow',()=>{
   if(btState==='connected') syncBTConnection();
-  else if(isAutoBTEnabled()) scheduleAutoReconnect(500);
+  else if(btState==='disconnected' && isAutoBTEnabled()) scheduleAutoReconnect(500);
 });
 document.addEventListener('visibilitychange',()=>{
-  if(!document.hidden && btState!=='connected' && isAutoBTEnabled()) scheduleAutoReconnect(500);
+  if(!document.hidden && btState==='disconnected' && isAutoBTEnabled()) scheduleAutoReconnect(500);
 });
 
 function openSettings(){state.screen='pengaturan';render()}
-function settingsHTML(){return `<section class="panel settings-shell"><div class="settings-window"><div class="report-titlebar"><div><b>⚙️ Pengaturan</b><div class="mini">Konfigurasi tempat, menu, QRIS, dan backup</div></div><button class="close" onclick="closeSettings()">×</button></div><div style="padding:16px"><div class="settingmenu"><button class="settingtab active">Umum</button><button class="settingtab" onclick="menuManager()">Daftar Menu</button><button class="settingtab" onclick="backupData()">Backup</button><button class="settingtab" onclick="restoreData()">Restore</button><button class="settingtab danger" onclick="wipe()">Hapus Semua Data</button></div><div class="grid2"><div class="field"><label>Nama Tempat</label><input id="setName" class="input" value="${esc(db.settings.name)}"></div><div class="field"><label>PPN (%)</label><input id="setTax" class="input" type="number" min="0" value="${db.settings.tax||''}"></div></div><div class="field"><label>Alamat</label><input id="setAddress" class="input" value="${esc(db.settings.address)}"></div><div class="grid2"><div class="field"><label>Logo Struk</label><input id="logoFile" type="file" accept="image/*" class="input">${db.settings.logo?`<div style="margin-top:8px;display:flex;align-items:center;gap:8px"><img src="${db.settings.logo}" alt="Logo tersimpan" style="max-width:100px;max-height:65px;object-fit:contain;border:1px solid var(--line);border-radius:8px;padding:4px"><button class="btn danger" onclick="removeSavedImage('logo')">Hapus Logo</button></div>`:'<div class="mini" style="margin-top:6px">Belum ada logo tersimpan.</div>'}</div><div class="field"><label>QRIS</label><input id="qrisFile" type="file" accept="image/*" class="input">${db.settings.qris?`<div style="margin-top:8px;display:flex;align-items:center;gap:8px"><img src="${db.settings.qris}" alt="QRIS tersimpan" style="max-width:100px;max-height:100px;object-fit:contain;border:1px solid var(--line);border-radius:8px;padding:4px"><button class="btn danger" onclick="removeSavedImage('qris')">Hapus QRIS</button></div>`:'<div class="mini" style="margin-top:6px">Belum ada QRIS tersimpan.</div>'}</div></div><button class="btn primary" onclick="saveSettings()">Simpan Pengaturan</button></div></section>`}
+function settingsHTML(){return `<section class="panel settings-shell"><div class="settings-window"><div class="report-titlebar"><div><b>⚙️ Pengaturan</b><div class="mini">Konfigurasi tempat, menu, QRIS, dan backup</div></div><button class="close" onclick="closeSettings()">×</button></div><div style="padding:16px"><div class="settingmenu"><button class="settingtab active">Umum</button><button class="settingtab" onclick="menuManager()">Daftar Menu</button><button class="settingtab" onclick="backupData()">Backup</button><button class="settingtab" onclick="restoreData()">Restore</button><button class="settingtab danger" onclick="wipe()">Hapus Semua Data</button></div><div class="grid2"><div class="field"><label>Nama Tempat</label><input id="setName" class="input" value="${esc(db.settings.name)}"></div><div class="field"><label>PPN (%)</label><input id="setTax" class="input" type="number" min="0" value="${db.settings.tax||''}"></div></div><div class="field"><label>Alamat</label><input id="setAddress" class="input" value="${esc(db.settings.address)}"></div><div class="grid2"><div class="field"><label>Logo Struk</label><input id="logoFile" type="file" accept="image/*" class="input">${db.settings.logo?`<div style="margin-top:8px;display:flex;align-items:center;gap:8px"><img src="${db.settings.logo}" alt="Logo tersimpan" style="max-width:100px;max-height:65px;object-fit:contain;border:1px solid var(--line);border-radius:8px;padding:4px"><button class="btn danger" onclick="removeSavedImage('logo')">Hapus Logo</button></div>`:'<div class="mini" style="margin-top:6px">Belum ada logo tersimpan.</div>'}</div><div class="field"><label>QRIS</label><input id="qrisFile" type="file" accept="image/*" class="input">${db.settings.qris?`<div style="margin-top:8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap"><img src="${db.settings.qris}" alt="QRIS tersimpan" style="max-width:100px;max-height:100px;object-fit:contain;border:1px solid var(--line);border-radius:8px;padding:4px"><button class="btn danger" onclick="removeSavedImage('qris')">Hapus QRIS</button></div>`:'<div class="mini" style="margin-top:6px">Belum ada QRIS tersimpan.</div>'}<div class="settings-save-inline"><button class="btn primary" onclick="saveSettings()">Simpan Pengaturan</button></div></div></div></div></section>`}
 function closeSettings(){state.screen='kasir';render()}
 async function saveSettings(){
   try{
@@ -2174,7 +2184,15 @@ function restoreData(){
   i.click();
 }
 function wipe(){if(confirm('Hapus SEMUA data termasuk transaksi dan menu?')){localStorage.removeItem(KEY);db=load();state.cart=[];toast('Semua data dihapus.');render()}}
-function modal(html){const m=document.getElementById('modal');m.innerHTML=`<div class="modalbox">${html}</div>`;m.classList.remove('hidden')}
+function modal(html){
+ const m=document.getElementById('modal');
+ const isPayment=html.includes('Metode Pembayaran');
+ const isMenuEditor=html.includes('Daftar Menu') && html.includes('menuEditor');
+ m.classList.toggle('payment-modal',isPayment);
+ m.classList.toggle('menu-editor-modal',isMenuEditor);
+ m.innerHTML=`<div class="modalbox${isPayment?' payment-modalbox':isMenuEditor?' menu-editor-modalbox':''}">${html}</div>`;
+ m.classList.remove('hidden');
+}
 function closeModal(){document.getElementById('modal').classList.add('hidden')}
 function generateOwnerDailyReportText(f, t, sh, sales) {
   const totalItem = sales.reduce((sum, s) => sum + (s.items || []).reduce((a, x) => a + Number(x.qty || 0), 0), 0);
@@ -2409,7 +2427,7 @@ async function printOwnerReportPreview() {
 
       await writeBluetoothReportOnly('\n\n\n\n');
 
-      toast('Laporan berhasil dikirim ke printer Bluetooth.');
+      toast('Laporan berhasil dicetak.');
       closeReceiptPreview();
       return;
 
@@ -2639,7 +2657,12 @@ function start(){
  }
 }
 start();
-setTimeout(()=>{if(isAutoBTEnabled())autoReconnectBluetooth()},1200);
+// Auto-connect hanya aktif setelah printer pernah berhasil dipasangkan manual.
+ // Tidak membuka dialog pairing; hanya mencari perangkat yang izinnya sudah tersimpan.
+ // Tombol Connect BT tetap aktif untuk pairing/pemilihan manual kapan saja.
+setTimeout(()=>{
+  if(isAutoBTEnabled() && btState==='disconnected') autoReconnectBluetooth();
+},300);
 </script>
 
 <script>
@@ -2652,4 +2675,167 @@ if ('serviceWorker' in navigator) {
 }
 </script>
 
-</body></html>
+
+<style id="payment-modal-visibility-fix">
+/* Payment modal: QRIS content scrolls inside the dialog and the save action stays reachable. */
+#modal.payment-modal{
+  z-index:1200!important;
+  align-items:flex-start!important;
+  justify-content:center!important;
+  overflow-y:auto!important;
+  -webkit-overflow-scrolling:touch;
+  padding:12px 12px max(16px,env(safe-area-inset-bottom))!important;
+}
+#modal.payment-modal .payment-modalbox{
+  width:min(680px,100%)!important;
+  max-height:calc(100dvh - 28px)!important;
+  max-height:calc(100vh - 28px)!important;
+  margin:auto 0!important;
+  display:flex!important;
+  flex-direction:column!important;
+  overflow-y:auto!important;
+  overscroll-behavior:contain;
+  padding:14px!important;
+}
+#modal.payment-modal .payment-modalbox .modalhead{
+  position:sticky;
+  top:-14px;
+  z-index:4;
+  flex:none;
+  background:#fff;
+  padding:2px 0 8px;
+}
+#modal.payment-modal .payment-modalbox #qrisPreview{
+  flex:none;
+  margin:8px 0!important;
+  padding:0 0 4px;
+}
+#modal.payment-modal .payment-modalbox #qrisPreview img{
+  display:block;
+  width:auto!important;
+  max-width:min(260px,72vw)!important;
+  max-height:min(34dvh,260px)!important;
+  max-height:min(34vh,260px)!important;
+  object-fit:contain;
+  margin:0 auto;
+}
+#modal.payment-modal .payment-modalbox > .btn.primary{
+  position:sticky!important;
+  bottom:-14px;
+  z-index:5;
+  flex:none!important;
+  margin-top:8px!important;
+  padding:12px!important;
+  box-shadow:0 -5px 12px #ffffffee;
+}
+@media(max-width:600px){
+  #modal.payment-modal{padding:8px 8px max(12px,env(safe-area-inset-bottom))!important}
+  #modal.payment-modal .payment-modalbox{
+    max-height:calc(100dvh - 16px)!important;
+    max-height:calc(100vh - 16px)!important;
+    padding:12px!important;
+  }
+  #modal.payment-modal .payment-modalbox #qrisPreview img{
+    max-height:30vh!important;
+  }
+}
+</style>
+
+
+<style id="menu-editor-bottom-actions-fix">
+/* Daftar menu: place the dialog above the fixed navigation and allow the final row to scroll fully into view. */
+#modal.menu-editor-modal{
+  z-index:1300!important;
+  align-items:center!important;
+  justify-content:center!important;
+  overflow-y:auto!important;
+  -webkit-overflow-scrolling:touch;
+  padding:12px 12px 18px!important;
+}
+#modal.menu-editor-modal .menu-editor-modalbox{
+  width:min(760px,100%)!important;
+  max-height:calc(100dvh - 30px)!important;
+  max-height:calc(100vh - 30px)!important;
+  overflow-y:auto!important;
+  overscroll-behavior:contain;
+  padding:16px 18px 24px!important;
+  margin:auto 0!important;
+}
+#modal.menu-editor-modal .modalhead{
+  position:sticky;
+  top:-16px;
+  z-index:6;
+  background:#fff;
+  padding:4px 0 10px;
+}
+#modal.menu-editor-modal #menuEditor{
+  padding-bottom:16px;
+}
+#modal.menu-editor-modal #menuEditor .scroll{
+  max-height:none!important;
+  overflow:visible!important;
+  padding-bottom:18px;
+}
+#modal.menu-editor-modal #menuEditor table{
+  width:100%;
+  border-collapse:collapse;
+}
+#modal.menu-editor-modal #menuEditor th,
+#modal.menu-editor-modal #menuEditor td{
+  vertical-align:middle;
+}
+#modal.menu-editor-modal #menuEditor td:last-child{
+  white-space:nowrap;
+  min-width:126px;
+}
+#modal.menu-editor-modal #menuEditor td:last-child .btn{
+  display:inline-block;
+  margin:2px 1px;
+}
+@media(max-width:600px){
+  #modal.menu-editor-modal{padding:8px 8px 14px!important}
+  #modal.menu-editor-modal .menu-editor-modalbox{
+    max-height:calc(100dvh - 18px)!important;
+    max-height:calc(100vh - 18px)!important;
+    padding:12px 12px 22px!important;
+  }
+  #modal.menu-editor-modal #menuEditor td:last-child{
+    min-width:116px;
+  }
+}
+</style>
+
+
+<style id="settings-save-next-to-qris">
+/* Keep Save Settings pinned above the fixed bottom navigation at all scroll positions. */
+.settings-save-inline{
+  position:fixed!important;
+  right:max(18px, calc((100vw - min(1180px, 96vw))/2 + 18px))!important;
+  bottom:82px!important;
+  z-index:45!important;
+  display:flex!important;
+  justify-content:flex-end;
+  align-items:center;
+  margin:0!important;
+  padding:8px!important;
+  background:#fff!important;
+  border:1px solid var(--line);
+  border-radius:12px;
+  box-shadow:0 4px 16px #0b2a4a20;
+}
+.settings-save-inline .btn{
+  min-width:142px;
+  white-space:nowrap;
+  padding:11px 16px;
+}
+@media(max-width:800px){
+  .settings-save-inline{
+    right:12px!important;
+    bottom:70px!important;
+  }
+}
+@media(max-height:520px){
+  .settings-save-inline{bottom:62px!important}
+}
+</style>
+\n</body></html>
