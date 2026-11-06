@@ -17,6 +17,15 @@ button,input,select{font:inherit}button{cursor:pointer;border:0}.hidden{display:
 .login-settings-btn{position:absolute;top:12px;right:12px;width:40px;height:40px;border:0;border-radius:12px;background:#eef4f8;color:var(--navy);font-size:21px;cursor:pointer;display:grid;place-items:center}
 .login-settings-btn:active{transform:scale(.96)}.loginlogo{text-align:center;font-size:44px}.toast{position:fixed;right:15px;bottom:88px;background:var(--navy);color:#fff;padding:12px 15px;border-radius:11px;z-index:80;box-shadow:var(--shadow)}
 .toast{display:flex;align-items:center;gap:11px;min-width:250px;max-width:min(390px,calc(100vw - 30px));padding:13px 16px;border:1px solid #dbe7ef;background:#fff;color:#183047;border-radius:14px;box-shadow:0 12px 36px #0b2a4a26;animation:toastIn .22s ease-out}
+/* Notifikasi selalu berada di lapisan teratas, termasuk di atas modal dan overlay. */
+#toast.toast{
+  position:fixed !important;
+  z-index:2147483647 !important;
+  right:15px !important;
+  bottom:88px !important;
+  pointer-events:none;
+}
+
 .toast .toast-mark{width:32px;height:32px;display:grid;place-items:center;flex:none;border-radius:50%;background:#dcfce7;color:#15803d;font-size:17px}
 .toast.toast-error .toast-mark{background:#fee2e2;color:#b91c1c}
 .toast.toast-info .toast-mark{background:#e0f2fe;color:#0369a1}
@@ -811,7 +820,7 @@ body {
   <div class="loginbox" style="position:relative">
     <button type="button" class="login-settings-btn" onclick="openLoginSettings()" title="Pengaturan" aria-label="Pengaturan">⚙</button>
     <div class="loginlogo">☕</div><h2 style="text-align:center;margin:5px 0">POS Kasir</h2>
-    <div class="field"><label>Nama Kasir</label><input id="loginName" class="input" placeholder="Nama kasir"></div>
+    <div class="field"><label>Nama Kasir</label><input id="loginName" class="input" placeholder="Nama kasir" onblur="this.value=formatPersonName(this.value)"></div>
     <div class="field"><label>Shift</label><select id="loginShift" class="select"><option value="1">Shift 1</option><option value="2">Shift 2</option><option value="3">Shift 3</option></select></div>
     <button class="btn primary" style="width:100%;margin-top:6px" onclick="login()">Masuk</button>
     <button class="btn light" style="width:100%;margin-top:8px" onclick="openReport(true)">Lihat Laporan</button>
@@ -888,6 +897,8 @@ function shiftBusinessDate(s,d=new Date()){let x=new Date(d);if(String(s)==='3' 
 let toastTimer=null;
 function toast(t,type='success'){
  const el=document.getElementById('toast');
+ // Pastikan notifikasi berada langsung di body agar tidak tertahan stacking context elemen lain.
+ if(el.parentElement!==document.body)document.body.appendChild(el);
  const message=String(t??'');
  const isError=type==='error'||/gagal|tidak valid|wajib diisi/i.test(message);
  const kind=isError?'error':(type==='info'?'info':'success');
@@ -931,8 +942,13 @@ function createShiftSession(name,shift){
  save();
  return session;
 }
+function formatPersonName(value){
+ return String(value||'').trim().replace(/\s+/g,' ').toLocaleLowerCase('id-ID')
+   .replace(/(^|[\s'-])([\p{L}])/gu,(match,separator,letter)=>separator+letter.toLocaleUpperCase('id-ID'));
+}
 function login(){
- const name=document.getElementById('loginName').value.trim(), shift=document.getElementById('loginShift').value;
+ const name=formatPersonName(document.getElementById('loginName').value), shift=document.getElementById('loginShift').value;
+ document.getElementById('loginName').value=name;
  if(!name)return toast('Nama kasir wajib diisi.');
  const session=createShiftSession(name,shift);
  if(!session)return;
@@ -1050,7 +1066,7 @@ function payModal(){
  const sub=state.cart.reduce((a,x)=>a+x.price*x.qty,0),disc=state.discountType==='%'?sub*(Number(state.discount)||0)/100:Number(state.discount)||0,after=Math.max(0,sub-disc),tax=Number(db.settings.tax)||0,total=after+(tax?after*tax/100:0);
  modal(`<div class="modalhead"><h3 style="margin:0;font-weight:500">Metode Pembayaran</h3><button class="close" onclick="closeModal()">×</button></div>
  <div class="notice">Total pembayaran <span>${rupiah(total)}</span></div>
- <div class="field"><label>Nama Konsumen / Meja *</label><input id="customer" class="input" </div>
+ <div class="field"><label>Nama Konsumen / Meja *</label><input id="customer" class="input" placeholder="Contoh: Meja 1 atau Ramli Hasanudin" onblur="this.value=formatPersonName(this.value)"></div>
  <div class="field"><label>Metode Pembayaran</label><select id="method" class="select" onchange="cashFields()"><option value="Cash">Cash</option><option value="QRIS">QRIS</option><option value="Lainnya">Lainnya</option></select></div>
  <div id="cashField" class="field"><label>Uang diterima</label><input id="cash" class="input" type="number" placeholder="${total}"></div>
  <div id="otherField" class="field hidden"><label>Nama Pembayaran</label><input id="otherMethod" class="input" placeholder="Contoh: Transfer BCA, GoPay, ShopeePay"></div>
@@ -1066,7 +1082,8 @@ function cashFields(){
 function completePayment(total){
  const session=getSession(state.sessionId);
  if(!session||session.closed)return toast('Shift sudah closing. Silakan masuk dengan shift yang aktif.');
- const customer=document.getElementById('customer').value.trim(), selectedMethod=document.getElementById('method').value;
+ const customer=formatPersonName(document.getElementById('customer').value), selectedMethod=document.getElementById('method').value;
+ document.getElementById('customer').value=customer;
  if(!customer)return toast('Nama konsumen/meja wajib diisi.');
 
  const confirmBtn=document.querySelector('#modal .modalbox .btn.primary');
