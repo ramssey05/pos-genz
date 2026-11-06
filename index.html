@@ -1005,13 +1005,13 @@ function cartHTML(){
      <div class="cartitems">${state.cart.length?state.cart.map((x,i)=>`
        <div class="cartrow">
          <span class="cart-no">${i+1}</span>
-         <div class="cart-name"><span class="strong">${esc(x.name)}</span></div>
+         <div class="cart-name"><span class="strong">${esc(x.name)}</span>${x.note?`<div class="mini" style="color:#16834a;white-space:normal">Catatan: ${esc(x.note)}</div>`:''}<button type="button" class="btn light" style="padding:3px 6px;font-size:10px;margin-top:4px" onclick="editCartNote('${x.lineKey||x.id}')">${x.note?'Ubah Catatan':'＋ Catatan'}</button></div>
          <span class="cart-price">${rupiah(x.price)}</span>
          <div class="qty">
-           <button onclick="changeQty('${x.id}',-1)">−</button><span>${x.qty}</span><button onclick="changeQty('${x.id}',1)">+</button>
+           <button onclick="changeQty('${x.lineKey||x.id}',-1)">−</button><span>${x.qty}</span><button onclick="changeQty('${x.lineKey||x.id}',1)">+</button>
          </div>
          <span class="cart-total">${rupiah(x.price*x.qty)}</span>
-         <button class="remove-cart" title="Hapus" onclick="removeCart('${x.id}')">×</button>
+         <button class="remove-cart" title="Hapus" onclick="removeCart('${x.lineKey||x.id}')">×</button>
        </div>`).join(''):`<div class="empty cart-empty">Belum ada menu dipilih.</div>`}</div>
    </div>
    <div class="summary">
@@ -1054,9 +1054,13 @@ function resumePending(id){
 function deletePending(id){
  db.pending=db.pending.filter(x=>x.id!==id);save();closeModal();pendingList();
 }
-function addCart(id){const p=db.products.find(x=>x.id===id);if(!p)return;const x=state.cart.find(x=>x.id===id);if(x)x.qty++;else state.cart.push({...p,qty:1});persistRuntime();render()}
-function changeQty(id,n){const x=state.cart.find(x=>x.id===id);if(!x)return;x.qty+=n;if(x.qty<=0)state.cart=state.cart.filter(y=>y.id!==id);persistRuntime();render()}
-function removeCart(id){state.cart=state.cart.filter(x=>x.id!==id);persistRuntime();render()}
+function addCart(id){const p=db.products.find(x=>x.id===id);if(!p)return;const x=state.cart.find(x=>x.id===id&&!x.note);if(x)x.qty++;else state.cart.push({...p,qty:1,note:'',lineKey:'L'+Date.now().toString(36)+Math.random().toString(36).slice(2,7)});persistRuntime();render()}
+function getCartLine(key){return state.cart.find(x=>String(x.lineKey||x.id)===String(key))}
+function changeQty(key,n){const x=getCartLine(key);if(!x)return;x.qty+=n;if(x.qty<=0)state.cart=state.cart.filter(y=>y!==x);persistRuntime();render()}
+function removeCart(key){const x=getCartLine(key);if(!x)return;state.cart=state.cart.filter(y=>y!==x);persistRuntime();render()}
+function editCartNote(key){const x=getCartLine(key);if(!x)return;const quick=['Less Sugar','Normal Sugar','No Sugar','Less Ice','No Ice','Pedas','Tidak Pedas','Sambal Dipisah'];const choices=quick.map(v=>`<button type="button" class="btn light" style="margin:3px" onclick="setCartNote('${String(key)}', '${v}')">${v}</button>`).join('');modal(`<div class="modalhead"><h3 style="margin:0;font-size:16px">Catatan ${esc(x.name)}</h3><button class="close" onclick="closeModal()">×</button></div><div class="mini" style="margin:8px 0">Pilih catatan cepat atau tulis permintaan khusus.</div><div style="display:flex;flex-wrap:wrap;gap:4px">${choices}</div><div class="field" style="margin-top:12px"><label>Catatan bebas</label><textarea id="cartNoteInput" class="input" rows="3" placeholder="Contoh: gula 25%, sambal dipisah...">${esc(x.note||'')}</textarea></div><div style="display:flex;gap:8px"><button class="btn light" style="flex:1" onclick="setCartNote('${String(key)}','')">Hapus Catatan</button><button class="btn primary" style="flex:1" onclick="saveCartNote('${String(key)}')">Simpan</button></div>`)}
+function setCartNote(key,value){const x=getCartLine(key);if(!x)return;x.note=value;persistRuntime();closeModal();render()}
+function saveCartNote(key){const el=document.getElementById('cartNoteInput');const x=getCartLine(key);if(!x)return;x.note=(el?.value||'').trim();persistRuntime();closeModal();render()}
 function clearCart(){if(state.cart.length&&confirm('Kosongkan keranjang?')){state.cart=[];state.discount=0;persistRuntime();render()}}
 function pending(){
  if(!state.cart.length)return toast('Keranjang kosong.');
@@ -1101,7 +1105,7 @@ function completePayment(total){
    if(!method){if(confirmBtn)confirmBtn.dataset.busy='0';return toast('Nama pembayaran lainnya wajib diisi.');}
  }
 
- const id='TRX-'+String(++db.lastNo).padStart(5,'0'),sale={id,date:new Date().toISOString(),businessDate:session.businessDate,sessionId:session.id,cashier:state.cashier,shift:state.shift,customer,items:state.cart.map(x=>({id:x.id,name:x.name,price:x.price,qty:x.qty})),discount:Number(state.discount)||0,discountType:state.discountType,tax:Number(db.settings.tax)||0,total,method,cash,change:method==='Cash'?cash-total:0,voided:false};
+ const id='TRX-'+String(++db.lastNo).padStart(5,'0'),sale={id,date:new Date().toISOString(),businessDate:session.businessDate,sessionId:session.id,cashier:state.cashier,shift:state.shift,customer,items:state.cart.map(x=>({id:x.id,name:x.name,price:x.price,qty:x.qty,note:x.note||''})),discount:Number(state.discount)||0,discountType:state.discountType,tax:Number(db.settings.tax)||0,total,method,cash,change:method==='Cash'?cash-total:0,voided:false};
  db.sales.push(sale);
  db.lastSession={date:dateKey(),shift:state.shift,closed:false,sessionId:session.id};
  state.cart=[];state.discount=0;persistRuntime();
@@ -1282,6 +1286,7 @@ function generateReceiptText(s, isVoid=false, reprint=false) {
   
   s.items.forEach(x => {
     text += `${x.name}\n`;
+    if (x.note) text += `  * ${x.note}\n`;
     const qtyPrice = `${x.qty} x ${rupiah(x.price)}`;
     const tot = rupiah(x.price * x.qty);
     const space = Math.max(1, W - qtyPrice.length - tot.length);
@@ -1419,6 +1424,7 @@ function receiptHTML(s,isVoid=false,reprint=false){
     const total=(Number(x.price)||0)*(Number(x.qty)||0);
     return `<div class="r-item">
       <div class="r-item-name">${esc(x.name)}</div>
+      ${x.note?`<div style="font-size:11px;color:#555;margin:2px 0 4px">* ${esc(x.note)}</div>`:''}
       <div class="r-item-detail"><span>${x.qty} × ${rupiah(x.price)}</span><span>${rupiah(total)}</span></div>
     </div>`;
   }).join('');
